@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * 
+ * Redline CMS
+ * 
+ * A simple and lightweight CMS
+ * @author connect@utpal.io <Utpal Sarkar>
+ */
+
 namespace RedlineCms\Traits;
 
 use Cycle\Annotated\Annotation\Column;
