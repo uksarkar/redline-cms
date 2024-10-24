@@ -1,0 +1,138 @@
+{% extends "layouts/admin.html" %}
+
+{% block title %}
+{% if isPage %}
+Pages
+{% else %}
+Posts
+{% endif %}
+{% endblock %}
+
+{% set breadcrumbs = [{'title': isPage ? 'Pages' : 'Posts'}] %}
+
+{% block pageHeading %}
+{% if isPage %}
+Pages
+{% else %}
+Posts
+{% endif %}
+{% endblock %}
+
+{% block topButton %}
+<a href="/admin/{% if isPage %}page{% else %}post{% endif %}/create" class="button is-primary">
+    <span class="icon"><i class="mdi mdi-plus"></i></span>
+    <span>Create {% if isPage %}page{% else %}post{% endif %}</span>
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="card has-table has-mobile-sort-spaced">
+    <header class="card-header">
+        <p class="card-header-title">
+            <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
+            {% if isPage %}Pages{% else %}Posts{% endif %}
+        </p>
+        <a href="#" class="card-header-icon">
+            <span class="icon"><i class="mdi mdi-reload"></i></span>
+        </a>
+    </header>
+    <div class="card-content">
+        <div class="b-table has-pagination">
+            <div class="table-wrapper has-mobile-cards">
+                <table class="table is-fullwidth is-striped is-hoverable is-sortable is-fullwidth">
+                    <thead>
+                        <tr>
+                            {% if not isPage %}
+                            <th></th>
+                            {% endif %}
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Status</th>
+                            {% if not isPage %}
+                            <th>Category</th>
+                            {% endif %}
+                            <th>Created</th>
+                            <th>Updated</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in posts.items %}
+                        <tr>
+                            {% if not isPage %}
+                            <td class="is-image-cell">
+                                <div class="image">
+                                    <img src="{{ p.getFeaturedImage() }}" class="is-rounded">
+                                </div>
+                            </td>
+                            {% endif %}
+                            <td>{{ p.getId() }}</td>
+                            <td>{{ p.getTitle() }}</td>
+                            <td>{{ p.getStatus().name }}</td>
+                            {% if not isPage %}
+                            <td>{{ p.getCategoryName() }}</td>
+                            {% endif %}
+                            <td data-label="Created">
+                                <small class="has-text-grey is-abbr-like">
+                                    {{ p.getCreatedAt() }}
+                                </small>
+                            </td>
+                            <td data-label="Created">
+                                <small class="has-text-grey is-abbr-like">
+                                    {{ p.getUpdatedAt() }}
+                                </small>
+                            </td>
+                            <td class="is-actions-cell">
+                                <div class="buttons is-right">
+                                    <a href="/admin/{% if isPage %}page{% else %}post{% endif %}/{{ p.getId() }}/edit"
+                                        class="button is-small is-primary">
+                                        <span class="icon"><i class="mdi mdi-pen"></i></span>
+                                    </a>
+                                    <a href="/{% if isPage %}pages{% else %}posts{% endif %}/{{ p.getSlug() }}"
+                                        target="_blank" class="button is-small is-primary">
+                                        <span class="icon"><i class="mdi mdi-eye"></i></span>
+                                    </a>
+                                    <form action="/admin/post/{{ p.getId() }}/delete" method="post">
+                                        <button class="button is-small is-danger" type="submit">
+                                            <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="notification">
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <div class="buttons has-addons">
+                                {% if posts.prevPage() %}
+                                <a href="/admin/{% if isPage %}pages{% else %}posts{% endif %}?page={{ posts.prevPage() }}"
+                                    class="button">Prev</a>
+                                {% endif %}
+                                {% for i in posts.pages() %}
+                                <a href="/admin/{% if isPage %}pages{% else %}posts{% endif %}?page={{ i }}"
+                                    class="button {% if posts.isActive(i) %}is-active{% endif %}">{{
+                                    i }}</a>
+                                {% endfor %}
+                                {% if posts.nextPage() %}
+                                <a href="/admin/{% if isPage %}pages{% else %}posts{% endif %}?page={{ posts.nextPage() }}"
+                                    class="button">Next</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <small>Page {{ posts.page }} of {{ posts.total }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

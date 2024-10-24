@@ -1,0 +1,87 @@
+{% extends "layouts/admin.html" %}
+
+{% block title %}App settings{% endblock %}
+{% set breadcrumbs = [{'title': 'App settings'}] %}
+{% block pageHeading %}App settings{% endblock %}
+
+{% block content %}
+<div class="card">
+    <header class="card-header">
+        <p class="card-header-title">
+            <span class="icon"><i class="mdi mdi-ballot"></i></span>
+            App settings
+        </p>
+    </header>
+    <div class="card-content">
+        <form method="post" action="/admin/settings" enctype="multipart/form-data">
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Site name</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input name="app_name" class="input {% if errors.app_name %}is-danger{% endif %}"
+                                type="text" placeholder="app_name" value="{{ inputs.app_name ?? context.appName }}">
+                        </div>
+                        {% if errors.app_name %}
+                        <p class="help is-danger">
+                            {{ errors.app_name }}
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="field is-horizontal">
+                <div class="field-label is-normal"><label class="label">Logo</label></div>
+                <div class="field-body">
+                    <div class="field">
+                        <img src="{{ context.getConfigs().getLogo() }}" alt="" srcset="" width="200">
+                        <div class="field file">
+                            <label class="upload control">
+                                <a class="button is-primary">
+                                    <span class="icon"><i class="mdi mdi-upload"></i></span>
+                                    <span>Pick a image</span>
+                                </a>
+                                <input name="logo" type="file" accept="image/png,image/jpg,image/jpeg">
+                            </label>
+                            {% if errors.logo %}
+                            <p class="help is-danger">
+                                {{ errors.logo }}
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field is-horizontal">
+                <div class="field-label is-normal"><label class="label">Favicon</label></div>
+                <div class="field-body">
+                    <div class="field">
+                        <img src="{{ context.getConfigs().getFavicon() }}" alt="" srcset="" width="200">
+                        <div class="field file">
+                            <label class="upload control">
+                                <a class="button is-primary">
+                                    <span class="icon"><i class="mdi mdi-upload"></i></span>
+                                    <span>Pick a image</span>
+                                </a>
+                                <input name="favicon" type="file" accept="image/png,image/jpg,image/jpeg">
+                            </label>
+                            {% if errors.favicon %}
+                            <p class="help is-danger">
+                                {{ errors.favicon }}
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="control is-right">
+                <button type="submit" class="button is-primary">
+                    <span>Submit</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

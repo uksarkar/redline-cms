@@ -1,0 +1,32 @@
+{% extends "@themes/default/layout.html" %}
+
+{% block title %}Home page{% endblock %}
+
+{% block content %}
+<div class="columns is-multiline">
+    {% for p in context.getLatestPosts() %}
+    <div class="column is-one-third">
+        <a href="/posts/{{ p.getSlug() }}">
+            <div class="box">
+                <article class="media">
+                    <div class="media-left">
+                        <figure class="image is-64x64">
+                            <img src="{{ p.getFeaturedImage() }}" alt="{{ p.getTitle() }}">
+                        </figure>
+                    </div>
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>{{ p.getTitle() }}</strong>
+                                <br>
+                                {{ p.getShortDescription() }}
+                            </p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

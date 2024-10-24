@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" class="has-aside-left has-aside-mobile-transition has-navbar-fixed-top has-aside-expanded">
+
+<head>
+    {{ include('layouts/partials/head.html') }}
+    <title>{% block title %}{% endblock %} - {{ context.appName }}</title>
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+    <div id="app">
+        <!-- Top bar -->
+        <nav id="navbar-main" class="navbar is-fixed-top">
+            <div class="navbar-brand">
+                <a class="navbar-item is-hidden-desktop jb-aside-mobile-toggle">
+                    <span class="icon"><i class="mdi mdi-forwardburger mdi-24px"></i></span>
+                </a>
+            </div>
+            <div class="navbar-brand is-right">
+                <a class="navbar-item is-hidden-desktop jb-navbar-menu-toggle" data-target="navbar-menu">
+                    <span class="icon"><i class="mdi mdi-dots-vertical"></i></span>
+                </a>
+            </div>
+            <div class="navbar-menu fadeIn animated faster" id="navbar-menu">
+                <div class="navbar-end">
+                    <div
+                        class="navbar-item has-dropdown has-dropdown-with-icons has-divider has-user-avatar is-hoverable">
+                        <a class="navbar-link is-arrowless">
+                            <div class="is-user-name"><span>{{ context.user().getUsername() }}</span></div>
+                            <span class="icon"><i class="mdi mdi-chevron-down"></i></span>
+                        </a>
+                        <div class="navbar-dropdown">
+                            <!-- <a href="/profile" class="navbar-item">
+                                <span class="icon"><i class="mdi mdi-account"></i></span>
+                                <span>My Profile</span>
+                            </a> -->
+                            <a href="/admin/settings" class="navbar-item">
+                                <span class="icon"><i class="mdi mdi-settings"></i></span>
+                                <span>Settings</span>
+                            </a>
+                        </div>
+                    </div>
+                    <a href="https://github.com/uksarkar/redline-cms" title="About"
+                        class="navbar-item has-divider is-desktop-icon-only">
+                        <span class="icon"><i class="mdi mdi-help-circle-outline"></i></span>
+                        <span>About</span>
+                    </a>
+                    <a href="/admin/logout" title="Log out" class="navbar-item is-desktop-icon-only">
+                        <span class="icon"><i class="mdi mdi-logout"></i></span>
+                        <span>Log out</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        <!-- /Top bar -->
+
+        <!-- Sidebar -->
+        <aside class="aside is-placed-left is-expanded">
+            <div class="aside-tools">
+                <div class="aside-tools-label">
+                    <span><b>Admin</b></span>
+                </div>
+            </div>
+            <div class="menu is-menu-main">
+                <p class="menu-label">General</p>
+                <ul class="menu-list">
+                    <li>
+                        <a href="/admin"
+                            class="{% if context.isPath('/admin') %}is-active{% endif %} router-link-active has-icon">
+                            <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
+                            <span class="menu-item-label">Dashboard</span>
+                        </a>
+                    </li>
+                </ul>
+                <p class="menu-label">Post</p>
+                <ul class="menu-list">
+                    <li>
+                        <a href="/admin/categories"
+                            class="{% if context.isPath('/admin/categories') %}is-active{% endif %} router-link-active has-icon">
+                            <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
+                            <span class="menu-item-label">Categories</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin/posts"
+                            class="{% if context.isPath('/admin/posts') %}is-active{% endif %} router-link-active has-icon">
+                            <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
+                            <span class="menu-item-label">Posts</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin/pages"
+                            class="{% if context.isPath('/admin/pages') %}is-active{% endif %} router-link-active has-icon">
+                            <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
+                            <span class="menu-item-label">Pages</span>
+                        </a>
+                    </li>
+                    <!-- <li>
+                        <a class="has-icon has-dropdown-icon">
+                            <span class="icon"><i class="mdi mdi-view-list"></i></span>
+                            <span class="menu-item-label">Submenus</span>
+                            <div class="dropdown-icon">
+                                <span class="icon"><i class="mdi mdi-plus"></i></span>
+                            </div>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="#void">
+                                    <span>Sub-item One</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#void">
+                                    <span>Sub-item Two</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li> -->
+                </ul>
+            </div>
+        </aside>
+        <!-- /Sidebar -->
+
+        <!-- Breadcrumbs -->
+        <section class="section is-title-bar">
+            <div class="level">
+                <div class="level-left">
+                    <div class="level-item">
+                        <ul>
+                            <li>Admin</li>
+                            {% for item in breadcrumbs %}
+                            {% if item.link %}
+                            <li><a href="{{ item.link }}">{{ item.title }}</a>
+                                {% else %}
+                            <li>{{ item.title }}</li>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="level-right">
+                    <div class="level-item">
+                        <div class="buttons is-right">
+                            {% block topButton %}
+                            <a href="/" target="_blank" class="button is-primary">
+                                <span class="icon"><i class="mdi mdi-web"></i></span>
+                                <span>Visit site</span>
+                            </a>
+                            {% endblock %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /Breadcrumbs -->
+
+        <!-- Page Heading -->
+        <section class="hero is-hero-bar">
+            <div class="hero-body">
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <h1 class="title">{% block pageHeading %}Dashboard{% endblock %}</h1>
+                        </div>
+                    </div>
+                    <div class="level-right" style="display: none;">
+                        <div class="level-item"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /Page Heading -->
+
+        <!-- Page content -->
+        <section class="section is-main-section">
+            {% block content %}{% endblock %}
+        </section>
+        <!-- /Page content -->
+
+        <!-- Page footer -->
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            © 2024, Redline CMS
+                        </div>
+                        <div class="level-item">
+                            <a href="https://github.com/uksarkar/redline-cms" style="height: 20px">
+                                <img src="https://img.shields.io/github/v/release/uksarkar/redline-cms?color=%23999">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <div class="logo">
+                                <a href="https://utpal.io">Author</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- Page footer -->
+    </div>
+
+    {{ include('layouts/partials/scripts.html') }}
+</body>
+
+</html>

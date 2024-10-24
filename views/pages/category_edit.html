@@ -1,0 +1,68 @@
+{% extends "layouts/admin.html" %}
+
+{% block title %}Edit category "{{ category.getName() }}"{% endblock %}
+{% set breadcrumbs = [{'title': 'Edit category'}] %}
+{% block pageHeading %}Edit category{% endblock %}
+
+{% block topButton %}
+<a class="button is-primary" href="/admin/categories">
+    <span class="icon"><i class="mdi mdi-arrow-left"></i></span>
+    <span>Back</span>
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <header class="card-header">
+        <p class="card-header-title">
+            <span class="icon"><i class="mdi mdi-ballot"></i></span>
+            Edit category
+        </p>
+    </header>
+    <div class="card-content">
+        <form method="post" action="/admin/category/{{ category.getId() }}/edit">
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Name</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input name="name" class="input {% if errors.name %}is-danger{% endif %}" type="text"
+                                placeholder="name" value="{{ inputs.name ?? category.getName() }}">
+                        </div>
+                        {% if errors.name %}
+                        <p class="help is-danger">
+                            {{ errors.name }}
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Slug</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input name="slug" class="input {% if errors.slug %}is-danger{% endif %}" type="text"
+                                placeholder="slug" value="{{ inputs.slug ?? category.getSlug() }}">
+                        </div>
+                        {% if errors.slug %}
+                        <p class="help is-danger">
+                            {{ errors.slug }}
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="control is-right">
+                <button type="submit" class="button is-primary">
+                    <span>Submit</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

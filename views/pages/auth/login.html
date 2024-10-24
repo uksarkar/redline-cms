@@ -1,0 +1,58 @@
+{% extends "layouts/master.html" %}
+
+{% block title %}Login{% endblock %}
+{% block head %}
+<style>
+    html,
+    body {
+        height: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Main Container -->
+<section class="hero is-fullheight is-flex is-justify-content-center is-align-items-center">
+    <div style="width: 30%;">
+        <!-- Login Box -->
+        <div class="box">
+            <h1 class="title has-text-centered">Login</h1>
+
+            {% if error %}
+            <div class="notification is-danger is-light">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <!-- Login Form -->
+            <form action="/admin/login" method="POST">
+                <div class="field">
+                    <label class="label">Email / Username</label>
+                    <div class="control">
+                        <input name="username" class="input" type="email" placeholder="email / username" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Password</label>
+                    <div class="control">
+                        <input class="input" name="password" type="password" placeholder="Enter your password" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-primary is-fullwidth" type="submit">Login</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <!-- Forgot Password Link -->
+        <!-- <p class="has-text-centered">
+            <a href="#">Forgot password?</a>
+        </p> -->
+    </div>
+</section>
+{% endblock %}

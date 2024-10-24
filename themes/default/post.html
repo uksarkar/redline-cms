@@ -1,0 +1,38 @@
+{% extends "@themes/default/layout.html" %}
+
+{% block title %}{{ post.getTitle() }}{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <h1 class="mb-5 is-size-2 has-text-weight-bold">{{ post.getTitle() }}</h1>
+    <hr />
+
+    <div class="box">
+        <article>
+            <div class="content">
+                <figure class="image is-4by3">
+                    <img src="{{ post.getFeaturedImage() }}" alt="{{ post.getTitle() }}">
+                </figure>
+                <p class="mt-3">{{ post.getContent()|raw }}</p>
+            </div>
+        </article>
+    </div>
+
+    <h2 class="is-size-4 has-text-weight-semibold mt-5">Latest Posts</h2>
+    <div class="columns is-multiline">
+        {% for p in context.latestPosts(5) %}
+        <div class="column is-one-fifth">
+            <div class="box">
+                <figure class="image is-4by3">
+                    <img src="{{ p.getFeaturedImage() }}" alt="{{ p.getTitle() }}">
+                </figure>
+                <h3 class="title is-5 mt-2">{{ p.getTitle() }}</h3>
+                <a class="button is-link is-fullwidth" href="/posts/{{ p.getSlug() }}">Read More</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

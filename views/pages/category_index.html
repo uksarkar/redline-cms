@@ -1,0 +1,158 @@
+{% extends "layouts/admin.html" %}
+
+{% block title %}Categories{% endblock %}
+{% set breadcrumbs = [{'title': 'Categories'}] %}
+{% block pageHeading %}Categories{% endblock %}
+
+{% block topButton %}
+<button class="button is-primary jb-modal" data-target="create-category" type="button">
+    <span class="icon"><i class="mdi mdi-plus"></i></span>
+    <span>Create category</span>
+</button>
+{% endblock %}
+
+{% block content %}
+<div class="card has-table has-mobile-sort-spaced">
+    <header class="card-header">
+        <p class="card-header-title">
+            <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
+            Categories
+        </p>
+        <a href="#" class="card-header-icon">
+            <span class="icon"><i class="mdi mdi-reload"></i></span>
+        </a>
+    </header>
+    <div class="card-content">
+        <div class="b-table has-pagination">
+            <div class="table-wrapper has-mobile-cards">
+                <table class="table is-fullwidth is-striped is-hoverable is-sortable is-fullwidth">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Slug</th>
+                            <th>Created</th>
+                            <th>Updated</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in categories.items %}
+                        <tr>
+                            <td>{{ c.getId() }}</td>
+                            <td>{{ c.getName() }}</td>
+                            <td>{{ c.getSlug() }}</td>
+                            <td data-label="Created">
+                                <small class="has-text-grey is-abbr-like">
+                                    {{ c.getCreatedAt() }}
+                                </small>
+                            </td>
+                            <td data-label="Created">
+                                <small class="has-text-grey is-abbr-like">
+                                    {{ c.getUpdatedAt() }}
+                                </small>
+                            </td>
+                            <td class="is-actions-cell">
+                                <div class="buttons is-right">
+                                    <a href="/admin/category/{{ c.getId() }}/edit" class="button is-small is-primary">
+                                        <span class="icon"><i class="mdi mdi-pen"></i></span>
+                                    </a>
+                                    <form action="/admin/category/{{ c.getId() }}/delete" method="post">
+                                        <button class="button is-small is-danger" type="submit">
+                                            <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="notification">
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <div class="buttons has-addons">
+                                {% if categories.prevPage() %}
+                                <a href="/admin/categories?page={{ categories.prevPage() }}" class="button">Prev</a>
+                                {% endif %}
+                                {% for i in categories.pages() %}
+                                <a href="/admin/categories?page={{ i }}"
+                                    class="button {% if categories.isActive(i) %}is-active{% endif %}">{{
+                                    i }}</a>
+                                {% endfor %}
+                                {% if categories.nextPage() %}
+                                <a href="/admin/categories?page={{ categories.nextPage() }}" class="button">Next</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <small>Page {{ categories.page }} of {{ categories.total }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="create-category" class="modal">
+    <div class="modal-background jb-modal-close"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Create category</p>
+            <button class="delete jb-modal-close" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <form method="post" action="/admin/category">
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Name</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input name="name" class="input {% if errors.name %}is-danger{% endif %}" type="text"
+                                    placeholder="name" value="{{ inputs.name }}">
+                            </div>
+                            {% if errors.name %}
+                            <p class="help is-danger">
+                                {{ errors.name }}
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Slug</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input name="slug" class="input {% if errors.slug %}is-danger{% endif %}" type="text"
+                                    placeholder="slug" value="{{ inputs.slug }}">
+                            </div>
+                            {% if errors.slug %}
+                            <p class="help is-danger">
+                                {{ errors.slug }}
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="control is-right">
+                    <button type="submit" class="button is-primary">
+                        <span>Submit</span>
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
+    <button class="modal-close is-large jb-modal-close" aria-label="close"></button>
+</div>
+{% endblock %}

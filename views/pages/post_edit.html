@@ -1,0 +1,166 @@
+{% extends "layouts/admin.html" %}
+
+{% block title %}Edit {% if isPage %}page{% else %}post{% endif %} "{{ post.getTitle() }}"{% endblock %}
+{% set breadcrumbs = [{'title': isPage ? 'Edit page' : 'Edit post'}] %}
+{% block pageHeading %}Edit {% if isPage %}page{% else %}post{% endif %}{% endblock %}
+
+{% block topButton %}
+<a class="button is-primary" href="/admin/{% if isPage %}pages{% else %}posts{% endif %}">
+    <span class="icon"><i class="mdi mdi-arrow-left"></i></span>
+    <span>Back</span>
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <header class="card-header">
+        <p class="card-header-title">
+            <span class="icon"><i class="mdi mdi-ballot"></i></span>
+            Edit {% if isPage %}page{% else %}post{% endif %}
+        </p>
+    </header>
+    <div class="card-content">
+        <form method="post" action="/admin/post/{{ post.getId() }}/edit" enctype="multipart/form-data">
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Title</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input name="title" class="input {% if errors.title %}is-danger{% endif %}" type="text"
+                                placeholder="title" value="{{ inputs.title ?? post.getTitle() }}">
+                        </div>
+                        {% if errors.title %}
+                        <p class="help is-danger">
+                            {{ errors.title }}
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Slug</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input name="slug" class="input {% if errors.slug %}is-danger{% endif %}" type="text"
+                                placeholder="slug" value="{{ inputs.slug ?? post.getSlug() }}">
+                        </div>
+                        {% if errors.slug %}
+                        <p class="help is-danger">
+                            {{ errors.slug }}
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Status</label>
+                </div>
+                <div class="field-body">
+                    <div class="field is-narrow">
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select class="{% if errors.status %}is-danger{% endif %}" name="status">
+                                    <option value="0" {% if post.isDrafted() %}selected{% endif %}>Drafted</option>
+                                    <option value="1" {% if post.isPublished() %}selected{% endif %}>Published</option>
+                                </select>
+                            </div>
+                        </div>
+                        {% if errors.status %}
+                        <p class="help is-danger">
+                            {{ errors.status }}
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {% if not isPage %}
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Category</label>
+                </div>
+                <div class="field-body">
+                    <div class="field is-narrow">
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select class="{% if errors.category %}is-danger{% endif %}" name="category_id">
+                                    {% for c in categories %}
+                                    <option value="{{ c.getId() }}" {% if post.isCategory(c.getId()) %}selected{% endif
+                                        %}>{{ c.getName() }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        {% if errors.category %}
+                        <p class="help is-danger">
+                            {{ errors.category }}
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <input type="hidden" name="type" value="1">
+            {% endif %}
+
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Body</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <textarea name="content" class="textarea {% if errors.content %}is-danger{% endif %}"
+                                placeholder="type post content">{{ (inputs.content ?? post.getRawContent())|raw }}</textarea>
+                        </div>
+                        {% if errors.content %}
+                        <p class="help is-danger">
+                            {{ errors.content }}
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {% if not isPage %}
+            <div class="field is-horizontal">
+                <div class="field-label is-normal"><label class="label">Image</label></div>
+                <div class="field-body">
+                    <div class="field">
+                        <img src="{{ post.getFeaturedImage() }}" alt="" srcset="" width="200">
+                        <div class="field file">
+                            <label class="upload control">
+                                <a class="button is-primary">
+                                    <span class="icon"><i class="mdi mdi-upload"></i></span>
+                                    <span>Pick a image</span>
+                                </a>
+                                <input name="image" type="file" accept="image/png,image/jpg,image/jpeg">
+                            </label>
+                            {% if errors.image %}
+                            <p class="help is-danger">
+                                {{ errors.image }}
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="control is-right">
+                <button type="submit" class="button is-primary">
+                    <span>Submit</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

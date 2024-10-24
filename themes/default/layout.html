@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} - {{ context.appName }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="shortcut icon" href="{{ context.getConfigs().getFavicon() }}" type="image/x-icon">
+    <style>
+        .is-disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .header {
+            background: #700303;
+        }
+
+        .navbar.is-light {
+            background-color: #d9b219;
+        }
+
+        .navbar.is-light .navbar-item.is-active {
+            background-color: #fed45e !important;
+        }
+
+        .navbar.is-light .navbar-item:hover {
+            background-color: #c09a0b !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="section p-0 header">
+        <div class="container">
+            <div class="columns is-centered">
+                <figure class="image">
+                    <img src="{{ context.getConfigs().getLogo() }}" alt="Logo" style="max-height: 100px;">
+                </figure>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menu -->
+    <nav class="navbar is-light">
+        <div class="container">
+            <div class="navbar-menu">
+                <div class="navbar-start">
+                    <a class="navbar-item {% if context.isPath('/') %}is-active{% endif %}" href="/">Home</a>
+                    {% for c in context.getCategories() %}
+                    <a class="navbar-item {% if context.isActiveSlug(c.getSlug()) %}is-active{% endif %}"
+                        href="/category/{{ c.getSlug() }}">{{ c.getName() }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <section class="section">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                {% set pages = context.getPages() %}
+                {% for i, page in pages %}
+                <a href="/pages/{{ page.getSlug() }}">{{ page.getTitle() }}</a>
+                {% if i < pages|length - 1 %} | {% endif %} {% endfor %} </p>
+                    <p>
+                        &copy; 2024 <b>{{ context.appName }}</b>. All rights reserved.
+                    </p>
+        </div>
+    </footer>
+
+</body>
+
+</html>
