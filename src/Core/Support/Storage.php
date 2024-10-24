@@ -40,4 +40,15 @@ class Storage
 
         return $path;
     }
+
+    public static function delete(string $file)
+    {
+        try {
+            static::getInstance()->driver->delete($file);
+            return true;
+        } catch (\Throwable $th) {
+            Log::info($th->getMessage(), $th->getTrace());
+            return false;
+        }
+    }
 }
