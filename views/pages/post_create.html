@@ -91,7 +91,7 @@
                     <div class="field is-narrow">
                         <div class="control">
                             <div class="select is-fullwidth">
-                                <select class="{% if errors.category %}is-danger{% endif %}" name="category">
+                                <select class="{% if errors.category %}is-danger{% endif %}" name="category_id">
                                     {% for c in categories %}
                                     <option value="{{ c.getId() }}">{{ c.getName() }}</option>
                                     {% endfor %}
