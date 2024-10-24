@@ -7,6 +7,7 @@ use RedlineCms\Controller\Controller;
 use RedlineCms\Core\Http\Request;
 use RedlineCms\Core\Http\Response;
 use RedlineCms\Core\Http\UploadFile;
+use RedlineCms\Core\Support\App;
 use RedlineCms\Core\Support\Storage;
 use RedlineCms\Repository\ConfigRepository;
 use RedlineCms\Service\AppConfig;
@@ -22,18 +23,22 @@ class SettingsController extends Controller
 
     public function update(Request $request, EntityManager $manager)
     {
-        $appConfig = new AppConfig($this->repo);
+        $appConfig = App::resolve(AppConfig::class);
         $config = $appConfig->config;
 
         $logo = UploadFile::get("logo");
         if ($logo) {
             $path = Storage::upload("/images", sprintf("%s.%s", uniqid("app-logo-"), $logo->ext), $logo);
+            Storage::delete($config->getLogo());
+
             $config->setLogo(sprintf("/storage/%s", $path));
         }
 
         $favicon = UploadFile::get("favicon");
         if ($favicon) {
             $path = Storage::upload("/images", sprintf("%s.%s", uniqid("app-favicon-"), $favicon->ext), $favicon);
+            Storage::delete($config->getFavicon());
+
             $config->setFavicon(sprintf("/storage%s", $path));
         }
 
