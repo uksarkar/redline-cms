@@ -23,6 +23,9 @@ class Config
     #[Column(type: 'integer', default: 1)]
     private int $status;
 
+    #[Column(type: 'string', default: 'default')]
+    private ?string $theme;
+
     public function __construct(string $appName, string $favicon, string $logo, int $status = 1)
     {
         $this->appName = $appName;
@@ -55,6 +58,11 @@ class Config
     public function getStatus(): int
     {
         return $this->status;
+    }
+
+    public function getTheme(): string
+    {
+        return $this->theme ?? "default";
     }
 
     public function setFavicon(string $path)

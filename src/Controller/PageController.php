@@ -4,6 +4,7 @@ namespace RedlineCms\Controller;
 
 use RedlineCms\Core\Http\Response;
 use RedlineCms\Core\Support\App;
+use RedlineCms\Core\Support\ThemeManager;
 use RedlineCms\Repository\PostRepository;
 use RedlineCms\Service\ViewContext;
 
@@ -20,7 +21,7 @@ class PageController extends Controller
             return Response::notFound(heading: "Page not found");
         }
 
-        return Response::view("@themes/default/page.html", [
+        return Response::view(ThemeManager::getTheme()->getTemplate("page.html"), [
             "page" => $page,
             "context" => App::resolve(ViewContext::class)
         ]);

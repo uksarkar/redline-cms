@@ -16,6 +16,9 @@
     },
     "license": "MIT",
     "autoload": {
+        "files": [
+            "src/Core/helpers.php"
+        ],
         "psr-4": {
             "RedlineCms\\": "src/"
         }

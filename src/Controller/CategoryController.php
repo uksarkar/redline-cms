@@ -4,6 +4,7 @@ namespace RedlineCms\Controller;
 
 use RedlineCms\Core\Http\Response;
 use RedlineCms\Core\Support\App;
+use RedlineCms\Core\Support\ThemeManager;
 use RedlineCms\Repository\CategoryRepository;
 use RedlineCms\Service\ViewContext;
 
@@ -19,7 +20,7 @@ class CategoryController extends Controller
             return Response::notFound(heading: "Category not found");
         }
 
-        return Response::view("@themes/default/category.html", [
+        return Response::view(ThemeManager::getTheme()->getTemplate("category.html"), [
             "category" => $category,
             "context" => App::resolve(ViewContext::class)
         ]);
