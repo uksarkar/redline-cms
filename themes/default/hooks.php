@@ -35,6 +35,11 @@ add_hook("define_admin_routes", [
         "label" => "Customize",
     ],
     [
+        "path" => "/contacts",
+        "handler" => fn(ThemeMetaRepository $repo) => Response::view("@themes/default/contacts.html", ["contacts" => $repo->getAll("contacts")]),
+        "label" => "Contacts"
+    ],
+    [
         "path" => "/customize",
         "method" => "POST",
         "handler" => function (Request $request, ThemeMetaRepository $repo, EntityManager $manager) {
@@ -50,6 +55,40 @@ add_hook("define_admin_routes", [
             $manager->run();
 
             return Response::redirect("/admin/custom/customize");
+        }
+    ],
+    [
+        "path" => "/contacts/{id}/delete",
+        "method" => "POST",
+        "handler" => function(int $id, ThemeMetaRepository $repo, EntityManager $manager) {
+            $entry = $repo->findByPK($id);
+
+            if($entry) {
+                $manager->delete($entry);
+                $manager->run();
+            }
+
+            return Response::back();
+        }
+    ]
+]);
+
+add_hook("define_routes", [
+    [
+        "path" => "contact",
+        "method" => "POST",
+        "handler" => function (Request $request, EntityManager $manager) {
+            $data = $request->only(["name", "email", "message"]);
+
+            if (count($data) !== 3) {
+                return Response::back(["error" => true]);
+            }
+
+            $meta = new ThemeMeta("contacts", $data);
+            $manager->persist($meta);
+            $manager->run();
+
+            return Response::back(["success" => true]);
         }
     ]
 ]);

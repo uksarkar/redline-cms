@@ -118,7 +118,7 @@
                     <div class="field">
                         <div class="control">
                             <textarea name="content" class="textarea {% if errors.content %}is-danger{% endif %}"
-                                placeholder="type post content">{{ inputs.content|raw }}</textarea>
+                                placeholder="type post content">{{ inputs.content|e('html') }}</textarea>
                         </div>
                         {% if errors.content %}
                         <p class="help is-danger">
