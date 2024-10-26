@@ -96,7 +96,7 @@
                         </a>
                     </li>
                     {% if context.appConfig.customRoutes|length %}
-                    <li>
+                    <li class="{% if context.isParent('/admin/custom') or context.isPath('/admin/themes') %}is-active{% endif %}">
                         <a class="has-icon has-dropdown-icon">
                             <span class="icon"><i class="mdi mdi-view-list"></i></span>
                             <span class="menu-item-label">Theme</span>
@@ -105,13 +105,13 @@
                             </div>
                         </a>
                         <ul>
-                            <li>
+                            <li class="{% if context.isPath('/admin/themes') %}is-active-item{% endif %}">
                                 <a href="/admin/themes">
                                     <span>Themes</span>
                                 </a>
                             </li>
                             {% for route in context.appConfig.customRoutes %}
-                            <li>
+                            <li class="{% if context.isPath(route.to) %}is-active-item{% endif %}">
                                 <a href="{{ route.to }}">
                                     <span>{{ route.label }}</span>
                                 </a>

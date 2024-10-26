@@ -93,9 +93,14 @@ class ViewContext
         return $slug === $checkSlug;
     }
 
-    public function isPath($path): string
+    public function isPath($path): bool
     {
         return $this->request->currentPath() === $path;
+    }
+
+    public function isParent($path): bool
+    {
+        return substr($this->request->currentPath(), 0, strlen($path)) === $path;
     }
 
     /**
