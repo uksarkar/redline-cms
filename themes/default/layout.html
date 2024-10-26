@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 
+{% set colors = context.getThemeMeta("colors") %}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,19 +16,24 @@
         }
 
         .header {
-            background: #700303;
+            background: {{ colors.getData().header_color ?? "#700303" }};
         }
 
         .navbar.is-light {
-            background-color: #d9b219;
+            background-color: {{ colors.getData().header_menu_color ?? "#d9b219" }};
         }
 
         .navbar.is-light .navbar-item.is-active {
-            background-color: #fed45e !important;
+            background-color: {{ colors.getData().header_menu_active_color ?? "#fed45e" }} !important;
         }
 
         .navbar.is-light .navbar-item:hover {
-            background-color: #c09a0b !important;
+            background-color: {{ colors.getData().header_menu_hover_color ?? "#c09a0b" }} !important;
+        }
+
+        .footer-links {
+            background: {{ colors.getData().footer_items_color ?? "#dbe9f5" }};
+            padding: 1rem;
         }
     </style>
 </head>
@@ -37,22 +44,43 @@
     <header class="section p-0 header">
         <div class="container">
             <div class="columns is-centered">
-                <figure class="image">
-                    <img src="{{ context.getConfigs().getLogo() }}" alt="Logo" style="max-height: 100px;">
-                </figure>
+                <a href="/">
+                    <figure class="image">
+                        <img src="{{ context.getConfigs().getLogo() }}" alt="Logo" style="max-height: 100px;">
+                    </figure>
+                </a>
             </div>
         </div>
     </header>
 
     <!-- Menu -->
-    <nav class="navbar is-light">
+    <nav class="navbar is-light" role="navigation" aria-label="main navigation">
         <div class="container">
-            <div class="navbar-menu">
+            <div class="navbar-brand">
+                <!-- Brand logo or title -->
+                <a class="navbar-item" href="/">
+                    <b>{{ context.appName }}</b>
+                </a>
+    
+                <!-- Burger icon for mobile -->
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+    
+            <!-- Navbar menu -->
+            <div id="navbarMenu" class="navbar-menu">
                 <div class="navbar-start">
-                    <a class="navbar-item {% if context.isPath('/') %}is-active{% endif %}" href="/">Home</a>
+                    <a class="navbar-item {% if context.isPath('/') %}is-active{% endif %}" href="/">
+                        <b>Home</b>
+                    </a>
                     {% for c in context.getCategories() %}
                     <a class="navbar-item {% if context.isActiveSlug(c.getSlug()) %}is-active{% endif %}"
-                        href="/category/{{ c.getSlug() }}">{{ c.getName() }}</a>
+                        href="/category/{{ c.getSlug() }}">
+                        <b>{{ c.getName() }}</b>
+                    </a>
                     {% endfor %}
                 </div>
             </div>
@@ -67,19 +95,31 @@
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="footer p-0">
         <div class="content has-text-centered">
-            <p>
+            <p class="footer-links">
                 {% set pages = context.getPages() %}
                 {% for i, page in pages %}
                 <a href="/pages/{{ page.getSlug() }}">{{ page.getTitle() }}</a>
-                {% if i < pages|length - 1 %} | {% endif %} {% endfor %} </p>
-                    <p>
-                        &copy; 2024 <b>{{ context.appName }}</b>. All rights reserved.
-                    </p>
+                {% if i < pages|length - 1 %} | {% endif %} {% endfor %}
+            </p>
+            <p class="py-5">
+                &copy; 2024 <b>{{ context.appName }}</b>. All rights reserved.
+            </p>
         </div>
     </footer>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const burger = document.querySelector('.navbar-burger');
+            const menu = document.getElementById('navbarMenu');
+    
+            burger.addEventListener('click', () => {
+                burger.classList.toggle('is-active');
+                menu.classList.toggle('is-active');
+            });
+        });
+    </script>
 </body>
 
 </html>

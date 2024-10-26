@@ -14,7 +14,8 @@ function default_get_colors_theme_meta(ThemeMetaRepository $repo)
             "header_color" => "#700303",
             "header_menu_color" => "#d9b219",
             "header_menu_active_color" => "#fed45e",
-            "footer_items_color" => "#ffffff00"
+            "footer_items_color" => "#dbe9f5",
+            "header_menu_hover_color" => "#c09a0b",
         ]);
     }
 
@@ -40,8 +41,8 @@ add_hook("define_admin_routes", [
             $meta = default_get_colors_theme_meta($repo);
             $colors = $meta->getData();
 
-            foreach ($colors as $key => $value) {
-                $colors[$key] = $request->getBody($key, $value);
+            foreach ($request->body() as $key => $value) {
+                $colors[$key] = $value;
             }
 
             $meta->setData($colors);
