@@ -51,4 +51,29 @@ class Storage
             return false;
         }
     }
+
+    public static function listDir(string $path)
+    {
+        if (!is_dir($path)) {
+            throw new \Exception("Invalid directory: $path");
+        }
+
+        $directories = [];
+
+        $items = scandir($path);
+
+        foreach ($items as $item) {
+            if ($item === '.' || $item === '..') {
+                continue;
+            }
+
+            $fullPath = $path . DIRECTORY_SEPARATOR . $item;
+
+            if (is_dir($fullPath)) {
+                $directories[] = $item;
+            }
+        }
+
+        return $directories;
+    }
 }

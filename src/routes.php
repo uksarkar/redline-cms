@@ -9,6 +9,7 @@ use RedlineCms\Middleware\GuestMiddleware;
 use RedlineCms\Controller\Admin\AuthController;
 use RedlineCms\Controller\Admin\DashboardController;
 use RedlineCms\Controller\Admin\SettingsController;
+use RedlineCms\Controller\Admin\ThemeController;
 use RedlineCms\Controller\CategoryController;
 use RedlineCms\Controller\HomeController;
 use RedlineCms\Controller\PageController;
@@ -51,4 +52,7 @@ Route::group(["path" => "/admin", "middlewares" => [AuthMiddleware::class]], fun
 
     Route::get("/settings", SettingsController::class, "view");
     Route::post("/settings", SettingsController::class, "update");
+
+    Route::get("/themes", ThemeController::class, "index");
+    Route::post("/themes", ThemeController::class, "update");
 });

@@ -79,4 +79,9 @@ class Config
     {
         $this->appName = $name;
     }
+
+    public function setTheme(string $theme)
+    {
+        $this->theme = $theme;
+    }
 }

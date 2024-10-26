@@ -10,6 +10,7 @@ class ThemeManager
     private array $hooks = [];
     private array $functions = [];
     private ?Theme $theme;
+    private static $namespace;
 
     // Private constructor to prevent direct instantiation
     private function __construct() {}
@@ -23,6 +24,15 @@ class ThemeManager
         return self::$instance;
     }
 
+    private static function getCurrentNamespace(): string
+    {
+        if (isset(static::$namespace)) {
+            return static::$namespace;
+        }
+
+        return static::getInstance()->getTheme()->dir;
+    }
+
     public static function getTheme(): Theme
     {
         $instance = static::getInstance();
@@ -34,54 +44,58 @@ class ThemeManager
         return $instance->theme;
     }
 
-    public static function hookExists(string $name): bool
+    public static function hookExists(string $name, string $namespace = null): bool
     {
-        return array_key_exists($name, static::getInstance()->hooks);
+        $instance = static::getInstance();
+        $namespace = $namespace ?? static::getCurrentNamespace();
+        return array_key_exists($namespace, $instance->hooks) && array_key_exists($name, $instance->hooks[$namespace]);
     }
 
-    public static function functionExists(string $name): bool
+    public static function functionExists(string $name, string $namespace = null): bool
     {
-        return array_key_exists($name, static::getInstance()->functions);
+        $instance = static::getInstance();
+        $namespace = $namespace ?? static::getCurrentNamespace();
+        return array_key_exists($namespace, $instance->hooks) && array_key_exists($name, $instance->functions[$namespace]);
     }
 
     // Method to add a hook
-    public static function addHook(string $name, mixed $callback): void
+    public static function addHook(string $name, mixed $hook, string $namespace = null): void
     {
         $instance = self::getInstance();
-        $instance->hooks[$name][] = $callback;
+        $instance->hooks[$namespace ?? static::getCurrentNamespace()][$name] = $hook;
     }
 
     // Method to add a function
-    public static function addFunction(string $name, callable $callback): void
+    public static function addFunction(string $name, callable $callback, string $namespace = null): void
     {
         $instance = self::getInstance();
-        $instance->functions[$name] = $callback;
+        $instance->functions[$namespace ?? static::getCurrentNamespace()][$name] = $callback;
     }
 
     // Retrieve a specific hook by name
-    public static function getHook(string $name): ?array
+    public static function getHook(string $name, string $namespace = null)
     {
         $instance = self::getInstance();
-        return $instance->hooks[$name] ?? null;
+        return $instance->hooks[$namespace ?? static::getCurrentNamespace()][$name] ?? null;
     }
 
     // Retrieve a specific function by name
     public static function getFunction(string $name): ?callable
     {
         $instance = self::getInstance();
-        return $instance->functions[$name] ?? null;
+        return $instance->functions[$namespace ?? static::getCurrentNamespace()][$name] ?? null;
     }
 
     // Get all hooks
-    public static function getAllHooks(): array
+    public static function getAllHooks(string $namespace = null): array
     {
-        return self::getInstance()->hooks;
+        return self::getInstance()->hooks[$namespace ?? static::getCurrentNamespace()];
     }
 
     // Get all functions
-    public static function getAllFunctions(): array
+    public static function getAllFunctions(string $namespace = null): array
     {
-        return self::getInstance()->functions;
+        return self::getInstance()->functions[$namespace ?? static::getCurrentNamespace()];
     }
 
     // Clear hooks and functions (e.g., on theme switch)
@@ -96,13 +110,23 @@ class ThemeManager
     public static function changeTheme(string $name): void
     {
         $instance = self::getInstance();
+        // Clear previous hooks and functions
+        $instance->clear();
+        $instance->theme = static::getThemeData($name);
 
+        // initial hooks
+        if (static::hookExists("install")) {
+            Hook::call("install");
+        }
+    }
+
+    public static function getThemeData(string $name): Theme
+    {
         if (!is_dir($themePath = Path::theme($name))) {
             throw new \Exception("No such theme in the '$themePath' path.");
         }
 
-        // Clear previous hooks and functions
-        $instance->clear();
+        static::$namespace = $name;
 
         // Load functions.php if it exists
         if (file_exists($functionsFile = Path::join($themePath, "functions.php"))) {
@@ -114,21 +138,18 @@ class ThemeManager
             include_once $hooksFile;
         }
 
-        if (static::hookExists("install")) {
-            Hook::call("install");
-        }
-
         $theme = [
             "name" => $name,
             "template_path" => "/",
-            "screenshot" => "https://placehold.co/400?text=PREVIEW"
+            "screenshot" => "https://placehold.co/335x250?text=PREVIEW"
         ];
 
-        if (static::hookExists("describe")) {
-            $theme = array_merge($theme, Hook::call("describe"));
+        if (static::hookExists("describe", $name)) {
+            $theme = array_merge($theme, Hook::call("describe", $name));
         }
-
         $theme["dir"] = $name;
-        $instance->theme = new Theme(...$theme);
+
+        static::$namespace = null;
+        return new Theme(...$theme);
     }
 }

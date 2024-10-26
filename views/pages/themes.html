@@ -1,0 +1,44 @@
+{% extends "layouts/admin.html" %}
+
+{% block title %}App themes{% endblock %}
+{% set breadcrumbs = [{'title': 'App themes'}] %}
+{% block pageHeading %}App themes{% endblock %}
+
+{% block content %}
+<div class="fixed-grid">
+    <div class="columns is-multiline">
+        {% for theme in themes %}
+        <div class="column is-3"> <!-- This creates 4 columns per row -->
+            <div class="card">
+                <div class="card-image">
+                    <figure class="image is-4by3">
+                        <img src="{{ theme.screenshot }}" alt="Preview" />
+                    </figure>
+                </div>
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-content">
+                            <p class="title is-4">{{ theme.name }}</p>
+                            <p class="subtitle is-6"><i>by {{ theme.author }}</i></p>
+                        </div>
+                    </div>
+                    <div class="content">
+                        {{ theme.description }}
+                        <br />
+                        {% if theme.isActive() %}
+                        <span class="tag is-primary is-light">Current Theme</span>
+                        {% else %}
+                        <form method="post" action="/admin/themes">
+                            <input type="hidden" name="theme" value="{{ theme.dir }}">
+                            <button type="submit" class="button is-small is-primary">Activate</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

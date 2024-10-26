@@ -31,6 +31,7 @@ use RedlineCms\Repository\CategoryRepository;
 use RedlineCms\Repository\ConfigRepository;
 use RedlineCms\Repository\PostRepository;
 use RedlineCms\Repository\UserRepository;
+use RedlineCms\Service\AppConfig;
 use RedlineCms\Service\AuthUser;
 use RedlineCms\Service\Symlink;
 
@@ -53,6 +54,7 @@ App::init([
     CategoryRepository::class => fn() => $orm->getRepository(Category::class),
     ConfigRepository::class => fn() => $orm->getRepository(Config::class),
 ]);
+App::resolve(AppConfig::class);
 
 /**
  * END of the PHP-DI container implementation

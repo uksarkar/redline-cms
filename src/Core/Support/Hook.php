@@ -19,34 +19,27 @@ class Hook
      * @return mixed
      * @throws Exception
      */
-    public static function call(string $name)
+    public static function call(string $name, string $namespace = null)
     {
         if (!array_key_exists($name, static::DEFINITIONS)) {
             throw new Exception("Unrecognized hook: '$name'. Check available hook names in DEFINITIONS.");
         }
 
-        $hookCallbacks = ThemeManager::getHook($name);
-
-        if (empty($hookCallbacks)) {
-            throw new Exception("No callbacks registered for hook: '$name'.");
+        if (!ThemeManager::hookExists($name, $namespace)) {
+            throw new Exception("No such hook registered for name: '$name'.");
         }
 
-        $results = [];
+        $hook = ThemeManager::getHook($name, $namespace);
 
-        foreach ($hookCallbacks as $callback) {
-            $result = self::invokeCallback($callback);
-
-            if (!self::validateType($result, self::DEFINITIONS[$name])) {
-                throw new Exception("Hook '$name' returned data of invalid type. Expected type: " . self::DEFINITIONS[$name]);
-            }
-
-            // If the return type is 'void', skip adding to results
-            if (self::DEFINITIONS[$name] !== 'void') {
-                $results[] = $result;
-            }
+        if (is_callable($hook)) {
+            $hook = self::invokeCallback($hook);
         }
 
-        return self::consolidateResults($results, $name);
+        if (!self::validateType($hook, self::DEFINITIONS[$name])) {
+            throw new Exception("Hook '$name' returned data of invalid type. Expected type: " . self::DEFINITIONS[$name]);
+        }
+
+        return $hook;
     }
 
     /**
@@ -87,26 +80,5 @@ class Hook
                 }
                 return gettype($value) === $expectedType;
         }
-    }
-
-    /**
-     * Consolidate multiple hook results into a single return value, if necessary.
-     *
-     * @param array $results
-     * @param string $hookName
-     * @return mixed
-     */
-    protected static function consolidateResults(array $results, string $hookName)
-    {
-        // Return consolidated results based on type
-        $expectedType = self::DEFINITIONS[$hookName];
-
-        if ($expectedType === 'array') {
-            return array_merge(...$results);
-        } elseif ($expectedType === 'string' || $expectedType === 'int') {
-            return end($results);  // Return the last result for single-value types
-        }
-
-        return $results;
     }
 }

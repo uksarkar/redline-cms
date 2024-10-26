@@ -3,6 +3,7 @@
 namespace RedlineCms\Core\Model;
 
 use RedlineCms\Core\Support\Path;
+use RedlineCms\Core\Support\ThemeManager;
 
 class Theme
 {
@@ -18,5 +19,10 @@ class Theme
     public function getTemplate(string $name): string
     {
         return ltrim(Path::join("@themes", $this->dir, $this->template_path, $name), "/");
+    }
+
+    public function isActive(): bool
+    {
+        return ThemeManager::getTheme()->dir === $this->dir;
     }
 }

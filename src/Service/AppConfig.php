@@ -4,6 +4,9 @@ namespace RedlineCms\Service;
 
 use Cycle\ORM\EntityManager;
 use RedlineCms\Core\Support\App;
+use RedlineCms\Core\Support\Log;
+use RedlineCms\Core\Support\Path;
+use RedlineCms\Core\Support\ThemeManager;
 use RedlineCms\Entity\Config;
 use RedlineCms\Entity\User;
 use RedlineCms\Repository\ConfigRepository;
@@ -19,6 +22,7 @@ class AppConfig
     public function __construct(private readonly ConfigRepository $repo, private readonly UserRepository $userRepo)
     {
         $this->persistConfig();
+        $this->initTheme();
     }
 
     private function persistConfig()
@@ -47,6 +51,17 @@ class AppConfig
 
             $manager->persist($user);
             $manager->run();
+        }
+    }
+
+    private function initTheme()
+    {
+        $theme = $this->config->getTheme();
+
+        Log::info("AAA", ["theme" => $theme]);
+
+        if (is_dir(Path::theme($theme))) {
+            ThemeManager::changeTheme($theme);
         }
     }
 }
