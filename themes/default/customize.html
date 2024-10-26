@@ -1,0 +1,72 @@
+{% extends "layouts/admin.html" %}
+
+{% block title %}Customize theme{% endblock %}
+{% set breadcrumbs = [{'title': 'Customize theme'}] %}
+{% block pageHeading %}Customize theme{% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-content">
+        <form method="post" action="/admin/custom/customize">
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Header color</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input name="header_color" class="input" type="color"
+                                value="{{ meta.getData().header_color }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Header menu color</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input name="header_menu_color" class="input" type="color"
+                                value="{{ meta.getData().header_menu_color }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Header menu active link color</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input name="header_menu_active_color" class="input" type="color"
+                                value="{{ meta.getData().header_menu_active_color }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class=" field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Footer items color</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input name="footer_items_color" class="input" type="color"
+                                value="{{ meta.getData().footer_items_color }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class=" control is-right">
+                <button type="submit" class="button is-primary">
+                    <span>Submit</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

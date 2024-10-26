@@ -16,7 +16,7 @@ class ViewContext
         private readonly PostRepository $postRepo,
         private readonly CategoryRepository $catRepo,
         private readonly Request $request,
-        private readonly AppConfig $appConfig,
+        public readonly AppConfig $appConfig,
     ) {
         $this->appName = $appConfig->config->getAppName() ?? App::getInstance()->container->get("appName");
         $this->version = App::getInstance()->container->get("version");

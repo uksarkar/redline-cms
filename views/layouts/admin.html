@@ -95,6 +95,31 @@
                             <span class="menu-item-label">Pages</span>
                         </a>
                     </li>
+                    {% if context.appConfig.customRoutes|length %}
+                    <li>
+                        <a class="has-icon has-dropdown-icon">
+                            <span class="icon"><i class="mdi mdi-view-list"></i></span>
+                            <span class="menu-item-label">Theme</span>
+                            <div class="dropdown-icon">
+                                <span class="icon"><i class="mdi mdi-plus"></i></span>
+                            </div>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="/admin/themes">
+                                    <span>Themes</span>
+                                </a>
+                            </li>
+                            {% for route in context.appConfig.customRoutes %}
+                            <li>
+                                <a href="{{ route.to }}">
+                                    <span>{{ route.label }}</span>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% else %}
                     <li>
                         <a href="/admin/themes"
                             class="{% if context.isPath('/admin/themes') %}is-active{% endif %} router-link-active has-icon">
@@ -102,27 +127,7 @@
                             <span class="menu-item-label">Themes</span>
                         </a>
                     </li>
-                    <!-- <li>
-                        <a class="has-icon has-dropdown-icon">
-                            <span class="icon"><i class="mdi mdi-view-list"></i></span>
-                            <span class="menu-item-label">Submenus</span>
-                            <div class="dropdown-icon">
-                                <span class="icon"><i class="mdi mdi-plus"></i></span>
-                            </div>
-                        </a>
-                        <ul>
-                            <li>
-                                <a href="#void">
-                                    <span>Sub-item One</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#void">
-                                    <span>Sub-item Two</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li> -->
+                    {% endif %}
                 </ul>
             </div>
         </aside>
@@ -194,7 +199,8 @@
                         </div>
                         <div class="level-item">
                             <a href="https://github.com/uksarkar/redline-cms" style="height: 20px">
-                                <img src="https://img.shields.io/github/v/release/uksarkar/redline-cms?color=%23999&include_prereleases">
+                                <img
+                                    src="https://img.shields.io/github/v/release/uksarkar/redline-cms?color=%23999&include_prereleases">
                             </a>
                         </div>
                     </div>

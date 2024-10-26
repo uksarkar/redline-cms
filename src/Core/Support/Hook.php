@@ -3,6 +3,8 @@
 namespace RedlineCms\Core\Support;
 
 use Exception;
+use RedlineCms\Core\Http\Route;
+use RedlineCms\Middleware\AuthMiddleware;
 
 class Hook
 {
@@ -10,6 +12,8 @@ class Hook
         "describe" => "array",
         "install" => "void",
         "version" => "string",
+        "define_routes" => "array",
+        "define_admin_routes" => "array",
     ];
 
     /**
@@ -40,6 +44,40 @@ class Hook
         }
 
         return $hook;
+    }
+
+    public static function call_define_routes(): void
+    {
+        if (!ThemeManager::hookExists("define_routes")) {
+            return;
+        }
+
+        foreach (static::call("define_routes") as $route) {
+            Route::add($route["method"] ?? "get", Path::join("custom", $route["path"]), $route["handler"], null);
+        }
+    }
+
+    public static function call_define_admin_routes(): array
+    {
+        if (!ThemeManager::hookExists("define_admin_routes")) {
+            return [];
+        }
+
+        $sidebarItems = [];
+        foreach (static::call("define_admin_routes") as $route) {
+            $path = Path::join("admin", "custom", $route["path"]);
+            Route::add($route["method"] ?? ['GET', 'HEAD'], $path, $route["handler"], null)->middleware(AuthMiddleware::class);
+
+            if (isset($route["label"])) {
+                $sidebarItems[] = [
+                    "label" => $route["label"],
+                    "to" => $path,
+                    "icon" => $route["icon"] ?? null
+                ];
+            }
+        }
+
+        return $sidebarItems;
     }
 
     /**

@@ -44,18 +44,28 @@ class ThemeManager
         return $instance->theme;
     }
 
+    public static function existsHookNamespace(string $namespace): bool
+    {
+        return array_key_exists($namespace, static::getInstance()->hooks);
+    }
+
+    public static function existsFunctionNamespace(string $namespace): bool
+    {
+        return array_key_exists($namespace, static::getInstance()->functions);
+    }
+
     public static function hookExists(string $name, string $namespace = null): bool
     {
         $instance = static::getInstance();
         $namespace = $namespace ?? static::getCurrentNamespace();
-        return array_key_exists($namespace, $instance->hooks) && array_key_exists($name, $instance->hooks[$namespace]);
+        return static::existsHookNamespace($namespace) && array_key_exists($name, $instance->hooks[$namespace]);
     }
 
     public static function functionExists(string $name, string $namespace = null): bool
     {
         $instance = static::getInstance();
         $namespace = $namespace ?? static::getCurrentNamespace();
-        return array_key_exists($namespace, $instance->hooks) && array_key_exists($name, $instance->functions[$namespace]);
+        return static::existsFunctionNamespace($namespace) && array_key_exists($name, $instance->functions[$namespace]);
     }
 
     // Method to add a hook
@@ -129,12 +139,12 @@ class ThemeManager
         static::$namespace = $name;
 
         // Load functions.php if it exists
-        if (file_exists($functionsFile = Path::join($themePath, "functions.php"))) {
+        if (!static::existsFunctionNamespace($name) && file_exists($functionsFile = Path::join($themePath, "functions.php"))) {
             include_once $functionsFile;
         }
 
         // Load hooks.php if it exists
-        if (file_exists($hooksFile = Path::join($themePath, "hooks.php"))) {
+        if (!static::existsHookNamespace($name) && file_exists($hooksFile = Path::join($themePath, "hooks.php"))) {
             include_once $hooksFile;
         }
 

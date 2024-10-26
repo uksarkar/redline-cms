@@ -4,6 +4,7 @@ namespace RedlineCms\Service;
 
 use Cycle\ORM\EntityManager;
 use RedlineCms\Core\Support\App;
+use RedlineCms\Core\Support\Hook;
 use RedlineCms\Core\Support\Log;
 use RedlineCms\Core\Support\Path;
 use RedlineCms\Core\Support\ThemeManager;
@@ -14,15 +15,28 @@ use RedlineCms\Repository\UserRepository;
 
 class AppConfig
 {
+    private static $instance;
+
     /**
      * @var Config
      */
     public $config;
+    public array $customRoutes;
 
-    public function __construct(private readonly ConfigRepository $repo, private readonly UserRepository $userRepo)
+    private function __construct(private readonly ConfigRepository $repo, private readonly UserRepository $userRepo)
     {
         $this->persistConfig();
         $this->initTheme();
+        $this->initRoutes();
+    }
+
+    public static function getInstance(): self
+    {
+        if (!isset(static::$instance)) {
+            static::$instance = new static(App::resolve(ConfigRepository::class), App::resolve(UserRepository::class));
+        }
+
+        return static::$instance;
     }
 
     private function persistConfig()
@@ -63,5 +77,11 @@ class AppConfig
         if (is_dir(Path::theme($theme))) {
             ThemeManager::changeTheme($theme);
         }
+    }
+
+    private function initRoutes()
+    {
+        Hook::call_define_routes();
+        $this->customRoutes = Hook::call_define_admin_routes();
     }
 }

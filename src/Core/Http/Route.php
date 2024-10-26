@@ -20,7 +20,7 @@ class Route
     {
         $lastIndex = count($this->routes) - 1;
 
-        if(array_key_exists($lastIndex, $this->routes)) {
+        if (array_key_exists($lastIndex, $this->routes)) {
             $middlewares = $this->routes[$lastIndex]["middlewares"] ?? [];
             $middlewares[] = $middleware;
             $this->routes[$lastIndex]["middlewares"] = $middlewares;
@@ -29,7 +29,7 @@ class Route
         return $this;
     }
 
-    private function addRoute(string|array $method, string $path, string $controller, string $action, array $middlewares = null)
+    private function addRoute(string|array $method, string $path, string|callable $controller, null|string $action, array $middlewares = null)
     {
         $this->routes[] = [
             'path' => $path,
@@ -52,10 +52,10 @@ class Route
     }
 
     // Dynamically handle any HTTP method
-    public static function add(string|array $method, string $path, string $controller, string $action)
+    public static function add(string|array $method, string $path, string|callable $controller, null|string $action)
     {
-        if(isset(static::$options) && is_array(static::$options)) {
-            if(isset(static::$options["path"])) {
+        if (isset(static::$options) && is_array(static::$options)) {
+            if (isset(static::$options["path"])) {
                 $path = rtrim(Path::join(static::$options["path"], $path), "/");
             }
 
@@ -66,27 +66,27 @@ class Route
     }
 
     // Shortcut methods for common HTTP methods
-    public static function get(string $path, string $controller, string $action)
+    public static function get(string $path, callable|string $controller, null|string $action)
     {
         return static::add(['GET', 'HEAD'], $path, $controller, $action);
     }
 
-    public static function post(string $path, string $controller, string $action)
+    public static function post(string $path, callable|string $controller, null|string $action)
     {
         return static::add('POST', $path, $controller, $action);
     }
 
-    public static function put(string $path, string $controller, string $action)
+    public static function put(string $path, callable|string $controller, null|string $action)
     {
         return static::add('PUT', $path, $controller, $action);
     }
 
-    public static function patch(string $path, string $controller, string $action)
+    public static function patch(string $path, callable|string $controller, null|string $action)
     {
         return static::add('PATCH', $path, $controller, $action);
     }
 
-    public static function delete(string $path, string $controller, string $action)
+    public static function delete(string $path, callable|string $controller, null|string $action)
     {
         return static::add('DELETE', $path, $controller, $action);
     }
@@ -103,8 +103,8 @@ class Route
         // Register all routes with FastRoute
         foreach (static::getInstance()->routes as $route) {
             $r->addRoute(
-                $route['method'], 
-                $route['path'], 
+                $route['method'],
+                $route['path'],
                 [$route['controller'], $route['action'], $route["middlewares"]]
             );
         }

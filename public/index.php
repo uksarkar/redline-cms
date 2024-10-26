@@ -26,10 +26,12 @@ use RedlineCms\Entity\Category;
 use RedlineCms\Entity\Config;
 use RedlineCms\Entity\DbSession;
 use RedlineCms\Entity\Post;
+use RedlineCms\Entity\ThemeMeta;
 use RedlineCms\Entity\User;
 use RedlineCms\Repository\CategoryRepository;
 use RedlineCms\Repository\ConfigRepository;
 use RedlineCms\Repository\PostRepository;
+use RedlineCms\Repository\ThemeMetaRepository;
 use RedlineCms\Repository\UserRepository;
 use RedlineCms\Service\AppConfig;
 use RedlineCms\Service\AuthUser;
@@ -53,6 +55,10 @@ App::init([
     DbSession::class => fn() => $orm->getRepository(DbSession::class),
     CategoryRepository::class => fn() => $orm->getRepository(Category::class),
     ConfigRepository::class => fn() => $orm->getRepository(Config::class),
+    ThemeMetaRepository::class => fn() => $orm->getRepository(ThemeMeta::class),
+
+    // Others
+    AppConfig::class => fn() => AppConfig::getInstance(),
 ]);
 App::resolve(AppConfig::class);
 
@@ -99,7 +105,11 @@ switch ($routeInfo[0]) {
 
         App::setParams($params);
 
-        $next = fn() => App::getContainer()->call([$controller, $method], $params);
+        if(is_callable($controller)) {
+            $next = fn() => App::getContainer()->call($controller, $params);
+        } else {
+            $next = fn() => App::getContainer()->call([$controller, $method], $params);
+        }
 
         // apply route middlewares
         if ($middlewares && is_array($middlewares) && count($middlewares) > 0) {
