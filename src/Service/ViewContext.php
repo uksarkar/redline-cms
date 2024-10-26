@@ -122,6 +122,6 @@ class ViewContext
             return $str;
         }
 
-        return substr($str, $limit) . "...";
+        return substr($str, 0, $limit) . "...";
     }
 }
