@@ -33,9 +33,31 @@ class ViewContext
             ->fetchAll();
     }
 
+    public function getLatestPostsPaginated(): PaginatedItems
+    {
+        $paginator = new Paginator($this->request);
+        $items = $this->postRepo
+            ->publishedPosts()
+            ->orderBy("created_at", "DESC")
+            ->offset($paginator->offset)
+            ->limit($paginator->limit)
+            ->fetchAll();
+
+        $total = $this->postRepo
+            ->publishedPosts()
+            ->count();
+
+        return new PaginatedItems(
+            items: $items,
+            total: $total,
+            page: $paginator->page,
+            limit: $paginator->limit,
+        );
+    }
+
     public function getCategoryPosts(int $categoryId): PaginatedItems
     {
-        $paginator = new Paginator(new Request);
+        $paginator = new Paginator($this->request);
         $items = $this->postRepo
             ->publishedPosts()
             ->where("category_id", $categoryId)
@@ -118,7 +140,7 @@ class ViewContext
 
     public function strLimit(string $str, int $limit = 100): string
     {
-        if(strlen($str) <= $limit) {
+        if (strlen($str) <= $limit) {
             return $str;
         }
 

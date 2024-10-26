@@ -25,9 +25,9 @@
         <div class="column is-one-fifth">
             <div class="box">
                 <figure class="image is-4by3">
-                    <img src="{{ p.getFeaturedImage() }}" alt="{{ p.getTitle() }}">
+                    <img src="{{ p.getFeaturedImage() }}" alt="{{ context.strLimit(p.getTitle(), 50) }}">
                 </figure>
-                <h3 class="title is-5 mt-2">{{ p.getTitle() }}</h3>
+                <h3 class="title is-5 mt-2">{{ context.strLimit(p.getTitle(), 55) }}</h3>
                 <a class="button is-link is-fullwidth" href="/posts/{{ p.getSlug() }}">Read More</a>
             </div>
         </div>

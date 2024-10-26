@@ -2,22 +2,24 @@
 
 {% block title %}Home page{% endblock %}
 
+{% set posts = context.getLatestPostsPaginated() %}
+
 {% block content %}
 <div class="columns is-multiline">
-    {% for p in context.getLatestPosts() %}
+    {% for p in posts.items %}
     <div class="column is-one-third">
         <a href="/posts/{{ p.getSlug() }}">
             <div class="box">
                 <article class="media">
                     <div class="media-left">
                         <figure class="image is-64x64">
-                            <img src="{{ p.getFeaturedImage() }}" alt="{{ p.getTitle() }}">
+                            <img src="{{ p.getFeaturedImage() }}" alt="{{ context.strLimit(p.getTitle(), 70) }}">
                         </figure>
                     </div>
                     <div class="media-content">
                         <div class="content">
                             <p>
-                                <strong>{{ p.getTitle() }}</strong>
+                                <strong>{{ context.strLimit(p.getTitle(), 70) }}</strong>
                                 <br>
                                 {{ p.getShortDescription() }}
                             </p>
@@ -29,4 +31,19 @@
     </div>
     {% endfor %}
 </div>
+<nav class="pagination" role="navigation" aria-label="pagination">
+    <a href="?page={{ posts.prevPage() }}"
+        class="pagination-previous {% if not posts.prevPage() %}is-disabled{% endif %}" href="#">Previous</a>
+    <a href="?page={{ posts.nextPage() }}" class="pagination-next {% if not posts.nextPage() %}is-disabled{% endif %}"
+        href="#">Next</a>
+
+    <ul class="pagination-list">
+        {% for i in posts.pages %}
+        <li>
+            <a href="?page={{ i }}" class="pagination-link {% if posts.isActive(i) %}is-current{% endif %}"
+                aria-label="Page {{ i }}" aria-current="page">{{ i }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</nav>
 {% endblock %}

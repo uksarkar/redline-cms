@@ -25,7 +25,8 @@ function default_get_colors_theme_meta(MetaDataRepository $repo)
 add_hook("describe", [
     "name" => "Default Theme",
     "author" => "Utpal Sarkar",
-    "description" => "This is a default theme by Redline CMS"
+    "description" => "This is a default theme by Redline CMS",
+    "screenshot" => "/assets/default-theme-preview.png"
 ]);
 
 add_hook("define_admin_routes", [
