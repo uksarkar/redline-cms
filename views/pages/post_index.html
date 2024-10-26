@@ -66,7 +66,7 @@ Posts
                             </td>
                             {% endif %}
                             <td>{{ p.getId() }}</td>
-                            <td>{{ p.getTitle() }}</td>
+                            <td>{{ context.strLimit(p.getTitle(), 50) }}</td>
                             <td>{{ p.getStatus().name }}</td>
                             {% if not isPage %}
                             <td>{{ p.getCategoryName() }}</td>

@@ -115,4 +115,13 @@ class ViewContext
     {
         return $this->metaRepo->findByName($name, $provider);
     }
+
+    public function strLimit(string $str, int $limit = 100): string
+    {
+        if(strlen($str) <= $limit) {
+            return $str;
+        }
+
+        return substr($str, $limit) . "...";
+    }
 }
