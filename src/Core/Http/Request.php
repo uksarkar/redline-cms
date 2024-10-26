@@ -53,6 +53,16 @@ class Request
         return $this->body;
     }
 
+    public function only(array $keys): array
+    {
+        $data = [];
+        foreach ($keys as $key) {
+            $data[$key] = $this->getBody($key);
+        }
+
+        return $data;
+    }
+
     /**
      * Get a specific field from the request body
      */

@@ -168,4 +168,15 @@ class Response
     {
         return new static('', $code, ["Location" => $to]);
     }
+    public static function back(array $queries = [], int $code = 302)
+    {
+        $previousUrl = $_SERVER['HTTP_REFERER'] ?? '/';
+
+        if (!empty($queries)) {
+            $queryString = http_build_query($queries);
+            $previousUrl .= (strpos($previousUrl, '?') === false ? '?' : '&') . $queryString;
+        }
+
+        return static::redirect($previousUrl, $code);
+    }
 }

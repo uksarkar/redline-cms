@@ -6,7 +6,7 @@ use Cycle\ORM\Select;
 use RedlineCms\Core\Support\ThemeManager;
 
 /**
- * @method \RedlineCms\Entity\ThemeMeta|null findByPK
+ * @method \RedlineCms\Entity\ThemeMeta|null findByPK(int $id)
  */
 class ThemeMetaRepository extends Select\Repository
 {
@@ -19,5 +19,13 @@ class ThemeMetaRepository extends Select\Repository
             ->where("name", $name)
             ->where("theme", ThemeManager::getTheme()->dir)
             ->fetchOne();
+    }
+
+    public function getAll(string $name): iterable
+    {
+        return $this->select()
+            ->where("name", $name)
+            ->where("theme", ThemeManager::getTheme()->dir)
+            ->fetchAll();
     }
 }
