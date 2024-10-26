@@ -6,8 +6,8 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Column;
 use RedlineCms\Core\Support\ThemeManager;
 
-#[Entity(repository: \RedlineCms\Repository\ThemeMetaRepository::class)]
-class ThemeMeta extends BaseEntity
+#[Entity(repository: \RedlineCms\Repository\MetaDataRepository::class)]
+class MetaData extends BaseEntity
 {
     private null|string|array $parsedData = null;
 
@@ -15,7 +15,7 @@ class ThemeMeta extends BaseEntity
     private int $id;
 
     #[Column(type: 'string')]
-    private string $theme;
+    private string $provider;
 
     #[Column(type: 'string')]
     private string $name;
@@ -23,11 +23,11 @@ class ThemeMeta extends BaseEntity
     #[Column(type: 'text')]
     private string $data;
 
-    public function __construct(string $name, array|string $data)
+    public function __construct(string $name, array|string $data, string $provider = null)
     {
         $this->name = $name;
         $this->data = is_array($data) ? json_encode($data) : $data;
-        $this->theme = ThemeManager::getTheme()->dir;
+        $this->provider = $provider ?? ThemeManager::getTheme()->dir;
         $this->parsedData = $data;
     }
 
@@ -58,9 +58,9 @@ class ThemeMeta extends BaseEntity
         return $this->parsedData;
     }
 
-    public function getTheme(): string
+    public function getProvider(): string
     {
-        return $this->theme;
+        return $this->provider;
     }
 
     // Setters

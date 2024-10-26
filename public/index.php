@@ -25,11 +25,13 @@ use RedlineCms\Core\Support\Path;
 use RedlineCms\Entity\Category;
 use RedlineCms\Entity\Config;
 use RedlineCms\Entity\DbSession;
+use RedlineCms\Entity\MetaData;
 use RedlineCms\Entity\Post;
 use RedlineCms\Entity\ThemeMeta;
 use RedlineCms\Entity\User;
 use RedlineCms\Repository\CategoryRepository;
 use RedlineCms\Repository\ConfigRepository;
+use RedlineCms\Repository\MetaDataRepository;
 use RedlineCms\Repository\PostRepository;
 use RedlineCms\Repository\ThemeMetaRepository;
 use RedlineCms\Repository\UserRepository;
@@ -55,7 +57,7 @@ App::init([
     DbSession::class => fn() => $orm->getRepository(DbSession::class),
     CategoryRepository::class => fn() => $orm->getRepository(Category::class),
     ConfigRepository::class => fn() => $orm->getRepository(Config::class),
-    ThemeMetaRepository::class => fn() => $orm->getRepository(ThemeMeta::class),
+    MetaDataRepository::class => fn() => $orm->getRepository(MetaData::class),
 
     // Others
     AppConfig::class => fn() => AppConfig::getInstance(),

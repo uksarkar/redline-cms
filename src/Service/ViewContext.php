@@ -5,8 +5,8 @@ namespace RedlineCms\Service;
 use RedlineCms\Core\Http\Request;
 use RedlineCms\Core\Support\App;
 use RedlineCms\Repository\CategoryRepository;
+use RedlineCms\Repository\MetaDataRepository;
 use RedlineCms\Repository\PostRepository;
-use RedlineCms\Repository\ThemeMetaRepository;
 
 class ViewContext
 {
@@ -16,7 +16,7 @@ class ViewContext
     public function __construct(
         private readonly PostRepository $postRepo,
         private readonly CategoryRepository $catRepo,
-        private readonly ThemeMetaRepository $metaRepo,
+        private readonly MetaDataRepository $metaRepo,
         private readonly Request $request,
         public readonly AppConfig $appConfig,
     ) {
@@ -111,8 +111,8 @@ class ViewContext
         return App::resolve(AuthUser::class)->getUser();
     }
 
-    public function getThemeMeta(string $name)
+    public function getMetaData(string $name, string $provider = null)
     {
-        return $this->metaRepo->findByName($name);
+        return $this->metaRepo->findByName($name, $provider);
     }
 }

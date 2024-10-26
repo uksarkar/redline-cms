@@ -3,14 +3,14 @@
 use Cycle\ORM\EntityManager;
 use RedlineCms\Core\Http\Request;
 use RedlineCms\Core\Http\Response;
-use RedlineCms\Entity\ThemeMeta;
-use RedlineCms\Repository\ThemeMetaRepository;
+use RedlineCms\Entity\MetaData;
+use RedlineCms\Repository\MetaDataRepository;
 
-function default_get_colors_theme_meta(ThemeMetaRepository $repo)
+function default_get_colors_theme_meta(MetaDataRepository $repo)
 {
     $colors = $repo->findByName("colors");
     if (!$colors) {
-        $colors = new ThemeMeta("colors", [
+        $colors = new MetaData("colors", [
             "header_color" => "#700303",
             "header_menu_color" => "#d9b219",
             "header_menu_active_color" => "#fed45e",
@@ -31,18 +31,18 @@ add_hook("describe", [
 add_hook("define_admin_routes", [
     [
         "path" => "/customize",
-        "handler" => fn(ThemeMetaRepository $repo) => Response::view("@themes/default/customize.html", ["meta" => default_get_colors_theme_meta($repo)]),
+        "handler" => fn(MetaDataRepository $repo) => Response::view("@themes/default/customize.html", ["meta" => default_get_colors_theme_meta($repo)]),
         "label" => "Customize",
     ],
     [
         "path" => "/contacts",
-        "handler" => fn(ThemeMetaRepository $repo) => Response::view("@themes/default/contacts.html", ["contacts" => $repo->getAll("contacts")]),
+        "handler" => fn(MetaDataRepository $repo) => Response::view("@themes/default/contacts.html", ["contacts" => $repo->getAll("contacts")]),
         "label" => "Contacts"
     ],
     [
         "path" => "/customize",
         "method" => "POST",
-        "handler" => function (Request $request, ThemeMetaRepository $repo, EntityManager $manager) {
+        "handler" => function (Request $request, MetaDataRepository $repo, EntityManager $manager) {
             $meta = default_get_colors_theme_meta($repo);
             $colors = $meta->getData();
 
@@ -60,7 +60,7 @@ add_hook("define_admin_routes", [
     [
         "path" => "/contacts/{id}/delete",
         "method" => "POST",
-        "handler" => function(int $id, ThemeMetaRepository $repo, EntityManager $manager) {
+        "handler" => function(int $id, MetaDataRepository $repo, EntityManager $manager) {
             $entry = $repo->findByPK($id);
 
             if($entry) {
@@ -84,7 +84,7 @@ add_hook("define_routes", [
                 return Response::back(["error" => true]);
             }
 
-            $meta = new ThemeMeta("contacts", $data);
+            $meta = new MetaData("contacts", $data);
             $manager->persist($meta);
             $manager->run();
 
