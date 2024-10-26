@@ -4,6 +4,7 @@ namespace RedlineCms\Entity;
 
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Column;
+use RedlineCms\Core\Support\Path;
 
 #[Entity(repository: \RedlineCms\Repository\ConfigRepository::class)]
 class Config
@@ -47,10 +48,20 @@ class Config
 
     public function getFavicon(): string
     {
-        return $this->favicon;
+        return Path::join("/storage", $this->favicon);
     }
 
     public function getLogo(): string
+    {
+        return Path::join("/storage", $this->logo);
+    }
+
+    public function getFaviconPath(): string
+    {
+        return $this->favicon;
+    }
+
+    public function getLogoPath(): string
     {
         return $this->logo;
     }

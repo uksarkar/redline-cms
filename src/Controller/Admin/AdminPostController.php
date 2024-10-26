@@ -146,6 +146,8 @@ class AdminPostController extends Controller
         $image = UploadFile::get("image");
         if ($image) {
             $path = Storage::upload("/images", sprintf("%s.%s", $post->getSlug(), $image->ext), $image);
+            Storage::delete($post->getImagePath());
+
             $post->setImage($path);
         }
 

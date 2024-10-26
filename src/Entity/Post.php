@@ -143,6 +143,11 @@ class Post
         $this->title = $title;
     }
 
+    public function getImagePath(): ?string
+    {
+        return $this->image;
+    }
+
     public function getFeaturedImage(): string
     {
         if ($this->image) {

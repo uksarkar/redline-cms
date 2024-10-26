@@ -24,22 +24,24 @@ class SettingsController extends Controller
     public function update(Request $request, EntityManager $manager)
     {
         $appConfig = App::resolve(AppConfig::class);
+        
+        /** @var \RedlineCms\Entity\Config */
         $config = $appConfig->config;
 
         $logo = UploadFile::get("logo");
         if ($logo) {
             $path = Storage::upload("/images", sprintf("%s.%s", uniqid("app-logo-"), $logo->ext), $logo);
-            Storage::delete($config->getLogo());
+            Storage::delete($config->getLogoPath());
 
-            $config->setLogo(sprintf("/storage/%s", $path));
+            $config->setLogo($path);
         }
 
         $favicon = UploadFile::get("favicon");
         if ($favicon) {
             $path = Storage::upload("/images", sprintf("%s.%s", uniqid("app-favicon-"), $favicon->ext), $favicon);
-            Storage::delete($config->getFavicon());
+            Storage::delete($config->getFaviconPath());
 
-            $config->setFavicon(sprintf("/storage%s", $path));
+            $config->setFavicon($path);
         }
 
         $config->setAppName($request->getBody("app_name"));
