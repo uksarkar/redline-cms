@@ -33,11 +33,13 @@ add_hook("define_admin_routes", [
         "path" => "/customize",
         "handler" => fn(MetaDataRepository $repo) => Response::view("@themes/default/customize.html", ["meta" => default_get_colors_theme_meta($repo)]),
         "label" => "Customize",
+        "icon" => "customize-computer",
     ],
     [
         "path" => "/contacts",
         "handler" => fn(MetaDataRepository $repo) => Response::view("@themes/default/contacts.html", ["contacts" => $repo->getAll("contacts")]),
-        "label" => "Contacts"
+        "label" => "Contacts",
+        "icon" => "address-book"
     ],
     [
         "path" => "/customize",

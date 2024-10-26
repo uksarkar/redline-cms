@@ -20,7 +20,7 @@ Posts
 
 {% block topButton %}
 <a href="/admin/{% if isPage %}page{% else %}post{% endif %}/create" class="button is-primary">
-    <span class="icon"><i class="mdi mdi-plus"></i></span>
+    <span class="icon"><i class="fi fi-tr-multiple"></i></span>
     <span>Create {% if isPage %}page{% else %}post{% endif %}</span>
 </a>
 {% endblock %}
@@ -29,11 +29,10 @@ Posts
 <div class="card has-table has-mobile-sort-spaced">
     <header class="card-header">
         <p class="card-header-title">
-            <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
             {% if isPage %}Pages{% else %}Posts{% endif %}
         </p>
-        <a href="#" class="card-header-icon">
-            <span class="icon"><i class="mdi mdi-reload"></i></span>
+        <a href="/admin/posts" class="card-header-icon">
+            <span class="icon"><i class="fi fi-tr-feedback-cycle-loop"></i></span>
         </a>
     </header>
     <div class="card-content">
@@ -86,15 +85,15 @@ Posts
                                 <div class="buttons is-right">
                                     <a href="/admin/{% if isPage %}page{% else %}post{% endif %}/{{ p.getId() }}/edit"
                                         class="button is-small is-primary">
-                                        <span class="icon"><i class="mdi mdi-pen"></i></span>
+                                        <span class="icon"><i class="fi fi-tr-pen-clip"></i></span>
                                     </a>
                                     <a href="/{% if isPage %}pages{% else %}posts{% endif %}/{{ p.getSlug() }}"
-                                        target="_blank" class="button is-small is-primary">
-                                        <span class="icon"><i class="mdi mdi-eye"></i></span>
+                                        target="_blank" class="button is-small is-info">
+                                        <span class="icon"><i class="fi fi-tr-link-alt"></i></span>
                                     </a>
                                     <form action="/admin/post/{{ p.getId() }}/delete" method="post">
                                         <button class="button is-small is-danger" type="submit">
-                                            <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                                            <span class="icon"><i class="fi fi-tr-trash-undo-alt"></i></span>
                                         </button>
                                     </form>
                                 </div>

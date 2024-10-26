@@ -6,7 +6,7 @@
 
 {% block topButton %}
 <a class="button is-primary" href="/admin/{% if isPage %}pages{% else %}posts{% endif %}">
-    <span class="icon"><i class="mdi mdi-arrow-left"></i></span>
+    <span class="icon"><i class="fi fi-tr-arrow-small-left"></i></span>
     <span>Back</span>
 </a>
 {% endblock %}
@@ -15,7 +15,6 @@
 <div class="card">
     <header class="card-header">
         <p class="card-header-title">
-            <span class="icon"><i class="mdi mdi-ballot"></i></span>
             Edit {% if isPage %}page{% else %}post{% endif %}
         </p>
     </header>
@@ -139,7 +138,7 @@
                         <div class="field file">
                             <label class="upload control">
                                 <a class="button is-primary">
-                                    <span class="icon"><i class="mdi mdi-upload"></i></span>
+                                    <span class="icon"><i class="fi fi-tr-inbox-out"></i></span>
                                     <span>Pick a image</span>
                                 </a>
                                 <input name="image" type="file" accept="image/png,image/jpg,image/jpeg">
