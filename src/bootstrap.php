@@ -71,8 +71,8 @@ if (false !== $pos = strpos($uri, '?')) {
 }
 $uri = rawurldecode($uri);
 
-if (!realpath(__DIR__ . "/storage")) {
-    Symlink::createSymlink(Path::storage("/public"), __DIR__ . "/storage");
+if (!realpath(Path::join(getcwd(), "storage"))) {
+    Symlink::createSymlink(Path::storage("/public"), Path::join(getcwd(), "storage"));
 }
 
 // Dispatch the route
