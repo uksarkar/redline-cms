@@ -4,6 +4,7 @@ namespace RedlineCms\Request;
 
 use RedlineCms\Core\Http\UploadFile;
 use RedlineCms\Core\Support\App;
+use RedlineCms\Entity\Enums\PostEditorType;
 use RedlineCms\Entity\Enums\PostStatus;
 use RedlineCms\Repository\PostRepository;
 use RedlineCms\Service\Str;
@@ -35,6 +36,17 @@ class StorePostRequest extends FormRequest
             $this->setBody("status", PostStatus::PUBLISHED);
         }
 
+        $editor = $this->getBody("editor_type");
+
+        if (ctype_digit($editor) && !PostEditorType::tryFrom((int) $editor)) {
+            $errors["editor_type"] = "Invalid editor type";
+            return $errors;
+        } elseif (ctype_digit($editor)) {
+            $this->setBody("editor_type", PostEditorType::from((int) $editor));
+        } else {
+            $this->setBody("editor_type", PostEditorType::DEFAULT);
+        }
+
         if ($slug = $this->getBody("slug")) {
             $slug = Str::url_safe_string(trim($slug));
 
@@ -47,7 +59,7 @@ class StorePostRequest extends FormRequest
             $this->setBody("slug", $slug);
         }
 
-        if($categoryId = $this->getBody("category_id")) {
+        if ($categoryId = $this->getBody("category_id")) {
             $this->setBody("category_id", (int) $categoryId);
         }
 

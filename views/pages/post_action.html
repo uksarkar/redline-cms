@@ -139,19 +139,19 @@
                     {% endif %}
 
                     <div class="field">
-                        <label class="label">Template</label>
+                        <label class="label">Editor type</label>
                         <div class="control">
                             <div class="select is-fullwidth">
-                                <select id="post-template" class="{% if errors.template %}is-danger{% endif %}"
-                                    name="template">
-                                    <option value="default" {% if (inputs.template ?? post.getTemplate())=='default'
+                                <select id="post-editor-type" class="{% if errors.editor_type %}is-danger{% endif %}"
+                                    name="editor_type">
+                                    <option value="1" {% if (inputs.editor_type ?? post.getEditorType().value)==1
                                         %}selected{% endif %}>Default</option>
-                                    <option value="raw" {% if (inputs.template ?? post.getTemplate())=='raw'
+                                    <option value="2" {% if (inputs.editor_type ?? post.getEditorType().value)==2
                                         %}selected{% endif %}>HTML</option>
                                 </select>
                             </div>
-                            {% if errors.template %}
-                            <p class="help is-danger">{{ errors.template }}</p>
+                            {% if errors.editor_type %}
+                            <p class="help is-danger">{{ errors.editor_type }}</p>
                             {% endif %}
                         </div>
                     </div>
@@ -176,7 +176,7 @@
 
     quill.root.innerHTML = document.getElementById('content').value;
     quill.on('text-change', function () {
-        if (document.getElementById("post-template").value !== "raw") {
+        if (document.getElementById("post-editor-type").value != 2) {
             document.getElementById('content').value = quill.root.innerHTML;
         }
     });
@@ -192,16 +192,16 @@
         document.getElementById('file-name').innerText = file.name;
     });
 
-    document.getElementById("post-template").addEventListener('change', function () {
-        handleTemplateChange(this.value);
+    document.getElementById("post-editor-type").addEventListener('change', function () {
+        handleEditorTypeChange(this.value);
     });
 
-    handleTemplateChange(document.getElementById("post-template").value, true);
+    handleEditorTypeChange(document.getElementById("post-editor-type").value, true);
 
-    function handleTemplateChange(template, init) {
+    function handleEditorTypeChange(type, init) {
         var postBodyTextarea = document.getElementById('content');
 
-        if (template === "raw") {
+        if (type == 2) {
             document.getElementById("editor").style.display = "none";
             document.querySelector(".ql-toolbar").style.display = "none";
             postBodyTextarea.style.display = "block";

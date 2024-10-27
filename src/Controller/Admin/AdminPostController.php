@@ -9,6 +9,7 @@ use RedlineCms\Core\Http\Response;
 use RedlineCms\Core\Http\UploadFile;
 use RedlineCms\Core\Support\App;
 use RedlineCms\Core\Support\Storage;
+use RedlineCms\Entity\Enums\PostEditorType;
 use RedlineCms\Entity\Enums\PostType;
 use RedlineCms\Entity\Post;
 use RedlineCms\Repository\CategoryRepository;
@@ -71,6 +72,7 @@ class AdminPostController extends Controller
         $categoryId = $request->getBody("category_id");
         $status = $request->getBody("status");
         $slug = $request->getBody("slug");
+        $editorType = $request->getBody("editor_type");
 
         if (!trim($slug)) {
             $slug = $this->postRepository->makeUniqueSlug($title);
@@ -94,7 +96,8 @@ class AdminPostController extends Controller
             userId: $userId,
             slug: $slug,
             type: $type,
-            status: $status
+            status: $status,
+            editorType: $editorType,
         );
 
         $post->setCategoryId($categoryId);
@@ -154,6 +157,7 @@ class AdminPostController extends Controller
         $post->setTitle($request->getBody("title"));
         $post->setCategoryId($request->getBody("category_id"));
         $post->setStatus($request->getBody("status"));
+        $post->setEditorType($request->getBody("editor_type"));
         $post->updateContent($request->getBody("content"));
 
         $manager->persist($post);

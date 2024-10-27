@@ -7,6 +7,7 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use Parsedown;
 use RedlineCms\Core\Support\App;
+use RedlineCms\Entity\Enums\PostEditorType;
 use RedlineCms\Entity\Enums\PostStatus;
 use RedlineCms\Entity\Enums\PostType;
 use RedlineCms\Repository\CategoryRepository;
@@ -45,6 +46,9 @@ class Post
     #[Column(type: 'string', nullable: true)]
     protected ?string $template;
 
+    #[Column(type: 'integer', default: 1)]
+    protected int $editorType;
+
     #[BelongsTo(target: Category::class, nullable: true)]
     public ?Category $category;
 
@@ -57,6 +61,7 @@ class Post
         Category $category = null,
         PostType $type = PostType::POST,
         PostStatus $status = PostStatus::DRAFTED,
+        PostEditorType $editorType = PostEditorType::DEFAULT,
     ) {
         $this->title = $title;
         $this->content = $content;
@@ -67,6 +72,7 @@ class Post
         $this->status = $status->value;
         $this->category = $category;
         $this->category = null;
+        $this->editorType = $editorType->value;
         $this->initTimestamps();
     }
 
@@ -123,6 +129,11 @@ class Post
         return $this->template ?? "default";
     }
 
+    public function getEditorType(): PostEditorType
+    {
+        return PostEditorType::from($this->editorType);
+    }
+
     public function getStatus(): PostStatus
     {
         return PostStatus::from($this->status);
@@ -175,6 +186,11 @@ class Post
     public function setImage(string $path)
     {
         $this->image = $path;
+    }
+
+    public function setEditorType(PostEditorType $type)
+    {
+        $this->editorType = $type->value;
     }
 
     public function updateContent(string $content): void
