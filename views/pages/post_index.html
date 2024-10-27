@@ -67,7 +67,7 @@ Posts
                             {% endif %}
                             <td>{{ p.getId() }}</td>
                             <td>{{ context.strLimit(p.getTitle(), 50) }}</td>
-                            <td>{{ p.getStatus().name }}</td>
+                            <td><span class="tag is-{% if p.getStatus().name == 'DRAFTED' %}grey{% else %}success{% endif %} is-light">{{ p.getStatus().name }}</span></td>
                             {% if not isPage %}
                             <td>{{ p.getCategoryName() }}</td>
                             {% endif %}
@@ -126,7 +126,7 @@ Posts
                     </div>
                     <div class="level-right">
                         <div class="level-item">
-                            <small>Page {{ posts.page }} of {{ posts.total }}</small>
+                            <small>Page {{ posts.page }} of {{ posts.maxPage() }}</small>
                         </div>
                     </div>
                 </div>
