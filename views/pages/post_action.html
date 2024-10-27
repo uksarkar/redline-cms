@@ -1,0 +1,223 @@
+{% extends "layouts/admin.html" %}
+
+{% set postLabel = isPage ? 'page' : 'post' %}
+{% set actionLabel = post ? 'Edit' : 'Create' %}
+{% set pageLabel = actionLabel ~ ' ' ~ postLabel %}
+
+{% block title %}{{ pageLabel }}{% endblock %}
+{% set breadcrumbs = [{'title': pageLabel}] %}
+{% block pageHeading %}Create {% if isPage %}page{% else %}post{% endif %}{% endblock %}
+
+{% block topButton %}
+<a class="button is-primary" href="/admin/posts">
+    <span class="icon"><i class="fi fi-tr-arrow-small-left"></i></span>
+    <span>Back</span>
+</a>
+{% endblock %}
+
+{% block content %}
+<form method="post" action="{% if post %}/admin/post/{{ post.getId() }}/edit{% else %}/admin/post{% endif %}"
+    enctype="multipart/form-data">
+    <div class="columns">
+        <!-- Left Side: Post Title, Slug, and Quill Editor for Body -->
+        <div class="column is-two-thirds">
+            <!-- Title Field -->
+            <div class="field">
+                <label class="label">Title</label>
+                <div class="control">
+                    <input name="title" class="input {% if errors.title %}is-danger{% endif %}" type="text"
+                        placeholder="Title" value="{{ inputs.title ?? post.getTitle() }}">
+                </div>
+                {% if errors.title %}
+                <p class="help is-danger">{{ errors.title }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Slug Field -->
+            <div class="field">
+                <label class="label">Slug {% if not post %}<small>(optional)</small>{% endif %}</label>
+                <div class="control">
+                    <input name="slug" class="input {% if errors.slug %}is-danger{% endif %}" type="text"
+                        placeholder="Slug" value="{{ inputs.slug ?? post.getSlug() }}">
+                </div>
+                {% if errors.slug %}
+                <p class="help is-danger">{{ errors.slug }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Quill Editor for Body -->
+            <div class="field">
+                <label class="label">Body</label>
+                <div class="control" style="background-color: #fff;">
+                    <div id="editor" style="min-height: 300px;"></div>
+                    <textarea name="content" id="content" class="textarea {% if errors.content %}is-danger{% endif %}"
+                        placeholder="type post content"
+                        style="display: none;">{{ (inputs.content ?? post.getRawContent())|e('html') }}</textarea>
+                </div>
+                {% if errors.content %}
+                <p class="help is-danger">{{ errors.content }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Right Side: Featured Image, Status, and Category -->
+        <div class="column is-one-third">
+            {% if not isPage %}
+            <div class="card">
+                <div class="card-content">
+                    <!-- Featured Image -->
+                    <div class="field">
+                        <label class="label">Featured Image</label>
+                        <div class="control">
+                            <div class="file has-name is-fullwidth">
+                                <label class="file-label">
+                                    <input name="image" type="file" accept="image/png,image/jpg,image/jpeg"
+                                        class="file-input" id="image-input">
+                                    <span class="file-cta">
+                                        <span class="icon"><i class="fi fi-tr-inbox-out"></i></span>
+                                        <span>Choose an image…</span>
+                                    </span>
+                                    <span class="file-name" id="file-name">No file chosen</span>
+                                </label>
+                            </div>
+                            <div id="image-preview" style="margin-top: 1em;">
+                                <img src="{{ post.getFeaturedImage() ?? 'https://placehold.co/410x250?text=Image' }}"
+                                    style="max-width: 100%;" />
+                            </div>
+                            {% if errors.image %}
+                            <p class="help is-danger">{{ errors.image }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="card">
+                <div class="card-content">
+                    <!-- Post Status -->
+                    <div class="field">
+                        <label class="label">Status</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select name="status" class="{% if errors.status %}is-danger{% endif %}">
+                                    <option value="0" {% if inputs.status is defined and inputs.status==0 %}selected{%
+                                        elseif post.isDrafted() %}selected{% endif %}>Drafted</option>
+                                    <option value="1" {% if inputs.status is defined and inputs.status==1 %}selected{%
+                                        elseif post.isPublished() %}selected{% endif %}>Published</option>
+                                </select>
+                            </div>
+                            {% if errors.status %}
+                            <p class="help is-danger">{{ errors.status }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Post Category -->
+                    {% if not isPage %}
+                    <div class="field">
+                        <label class="label">Category</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select class="{% if errors.category %}is-danger{% endif %}" name="category_id">
+                                    {% for c in categories %}
+                                    <option value="{{ c.getId() }}" {% if inputs.category_id is defined and
+                                        inputs.category_id==c.getId() %}selected{% elseif post.isCategory(c.getId())
+                                        %}selected{% endif %}>
+                                        {{ c.getName() }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            {% if errors.category %}
+                            <p class="help is-danger">{{ errors.category }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <input type="hidden" name="type" value="1">
+                    {% endif %}
+
+                    <div class="field">
+                        <label class="label">Template</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select id="post-template" class="{% if errors.template %}is-danger{% endif %}"
+                                    name="template">
+                                    <option value="default" {% if (inputs.template ?? post.getTemplate())=='default'
+                                        %}selected{% endif %}>Default</option>
+                                    <option value="raw" {% if (inputs.template ?? post.getTemplate())=='raw'
+                                        %}selected{% endif %}>HTML</option>
+                                </select>
+                            </div>
+                            {% if errors.template %}
+                            <p class="help is-danger">{{ errors.template }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="level">
+        <div class="level-left"></div>
+        <div class="level-right">
+            <button class="button is-primary" type="submit">Submit</button>
+        </div>
+    </div>
+</form>
+
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script>
+    var quill = new Quill('#editor', {
+        theme: 'snow'
+    });
+
+    quill.root.innerHTML = document.getElementById('content').value;
+    quill.on('text-change', function () {
+        if (document.getElementById("post-template").value !== "raw") {
+            document.getElementById('content').value = quill.root.innerHTML;
+        }
+    });
+
+    // Image preview script
+    document.getElementById('image-input')?.addEventListener('change', function () {
+        var file = this.files[0];
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            document.getElementById('image-preview').innerHTML = '<img src="' + e.target.result + '" alt="Image Preview" style="max-width: 100%;">';
+        };
+        reader.readAsDataURL(file);
+        document.getElementById('file-name').innerText = file.name;
+    });
+
+    document.getElementById("post-template").addEventListener('change', function () {
+        handleTemplateChange(this.value);
+    });
+
+    handleTemplateChange(document.getElementById("post-template").value, true);
+
+    function handleTemplateChange(template, init) {
+        var postBodyTextarea = document.getElementById('content');
+
+        if (template === "raw") {
+            document.getElementById("editor").style.display = "none";
+            document.querySelector(".ql-toolbar").style.display = "none";
+            postBodyTextarea.style.display = "block";
+
+            if (!init) {
+                postBodyTextarea.value = quill.root.innerHTML;
+            }
+        } else {
+            document.getElementById("editor").style.display = "block";
+            document.querySelector(".ql-toolbar").style.display = "block";
+            postBodyTextarea.style.display = "none";
+
+            if (!init) {
+                quill.root.innerHTML = postBodyTextarea.value;
+            }
+        }
+    }
+</script>
+{% endblock %}

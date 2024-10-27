@@ -31,7 +31,7 @@ Posts
         <p class="card-header-title">
             {% if isPage %}Pages{% else %}Posts{% endif %}
         </p>
-        <a href="/admin/posts" class="card-header-icon">
+        <a href="/admin/{% if isPage %}pages{% else %}posts{% endif %}" class="card-header-icon">
             <span class="icon"><i class="fi fi-tr-feedback-cycle-loop"></i></span>
         </a>
     </header>

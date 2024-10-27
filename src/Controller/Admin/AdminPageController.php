@@ -41,7 +41,7 @@ class AdminPageController extends Controller
     {
         $isPage = true;
 
-        return Response::view("pages/post_create.html", compact("isPage"));
+        return Response::view("pages/post_action.html", compact("isPage"));
     }
 
     public function edit(int $id)
@@ -53,6 +53,6 @@ class AdminPageController extends Controller
         }
         $isPage = true;
 
-        return Response::view("pages/post_edit.html", compact("post", "isPage"));
+        return Response::view("pages/post_action.html", compact("post", "isPage"));
     }
 }

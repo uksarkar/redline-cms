@@ -50,7 +50,7 @@ class AdminPostController extends Controller
     {
         $categories = App::resolve(CategoryRepository::class)->withoutTrashed()->fetchAll();
 
-        return Response::view("pages/post_create.html", compact("categories"));
+        return Response::view("pages/post_action.html", compact("categories"));
     }
 
     public function store(StorePostRequest $request, EntityManager $manager)
@@ -58,7 +58,7 @@ class AdminPostController extends Controller
         $isPage = !empty($request->getBody("type"));
 
         if (!$request->isValid()) {
-            return Response::view("pages/post_create.html", [
+            return Response::view("pages/post_action.html", [
                 "errors" => $request->getErrors(),
                 "inputs" => $request->body(),
                 "isPage" => $isPage,
@@ -117,7 +117,7 @@ class AdminPostController extends Controller
 
         $categories = App::resolve(CategoryRepository::class)->withoutTrashed()->fetchAll();
 
-        return Response::view("pages/post_edit.html", compact("post", "categories"));
+        return Response::view("pages/post_action.html", compact("post", "categories"));
     }
 
     public function update(int $id, StorePostRequest $request, EntityManager $manager)
@@ -132,7 +132,7 @@ class AdminPostController extends Controller
         if (!$request->isValid()) {
             $categories = App::resolve(CategoryRepository::class)->withoutTrashed()->fetchAll();
 
-            return Response::view("pages/post_edit.html", [
+            return Response::view("pages/post_action.html", [
                 "post" => $post,
                 "errors" => $request->getErrors(),
                 "categories" => $categories,
