@@ -88,7 +88,7 @@ Posts
                                         <span class="icon"><i class="fi fi-tr-pen-clip"></i></span>
                                     </a>
                                     <a href="/{% if isPage %}pages{% else %}posts{% endif %}/{{ p.getSlug() }}"
-                                        target="_blank" class="button is-small is-info">
+                                        target="_blank" class="button is-small is-info {% if p.getStatus().name == 'DRAFTED' %}is-disabled{% endif %}">
                                         <span class="icon"><i class="fi fi-tr-link-alt"></i></span>
                                     </a>
                                     <form action="/admin/post/{{ p.getId() }}/delete" method="post">
