@@ -11,17 +11,22 @@ use RedlineCms\Service\Str;
 
 class StorePostRequest extends FormRequest
 {
+    protected function keys(): array
+    {
+        return ["title", "content"];
+    }
+
+    protected function rules(): array
+    {
+        return [
+            "required" => $this->keys(),
+            "lengthMax" => [['title', 255]]
+        ];
+    }
+
     protected function validate(): array
     {
-        $errors = [];
-
-        if (!$this->getBody("title")) {
-            $errors["title"] = "Title is required";
-            return $errors;
-        }
-
-        if (!$this->getBody("content")) {
-            $errors["content"] = "Content is required";
+        if (count($errors = parent::validate())) {
             return $errors;
         }
 

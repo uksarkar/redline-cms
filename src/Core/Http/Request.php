@@ -53,14 +53,28 @@ class Request
         return $this->body;
     }
 
-    public function only(array $keys): array
+    public function only(array $keys, bool $has = false): array
     {
         $data = [];
         foreach ($keys as $key) {
-            $data[$key] = $this->getBody($key);
+            if(!$has || $this->has($key)) {
+                $data[$key] = $this->getBody($key);
+            }
         }
 
         return $data;
+    }
+
+    public function has(string $key): bool
+    {
+        return array_key_exists($key, $this->body());
+    }
+
+    public function remove(string $key)
+    {
+        if($this->has($key)) {
+            unset($key, $this->body);
+        }
     }
 
     /**

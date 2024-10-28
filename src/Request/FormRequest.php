@@ -3,6 +3,7 @@
 namespace RedlineCms\Request;
 
 use RedlineCms\Core\Http\Request;
+use Valitron\Validator;
 
 abstract class FormRequest extends Request
 {
@@ -23,5 +24,27 @@ abstract class FormRequest extends Request
         return $this->errors;
     }
 
-    protected abstract function validate(): array;
+    private function formatErrors(array $errors): array
+    {
+        $formattedErrors = [];
+        foreach ($errors as $field => $messages) {
+            $formattedErrors[$field] = $messages[0];
+        }
+        return $formattedErrors;
+    }
+
+    protected function validate(): array
+    {
+        $v = new Validator($this->only($this->keys()));
+        $v->rules($this->rules());
+
+        if (!$v->validate()) {
+            return $this->formatErrors($v->errors());
+        }
+
+        return [];
+    }
+
+    protected abstract function keys(): array;
+    protected abstract function rules(): array;
 }

@@ -8,12 +8,24 @@ use RedlineCms\Service\Str;
 
 class CategoryStoreRequest extends FormRequest
 {
+    protected function keys(): array
+    {
+        return ["name"];
+    }
+
+    protected function rules(): array
+    {
+        return [
+            "required" => $this->keys(),
+            'lengthMax' => [
+                ['name', 255]
+            ],
+        ];
+    }
+
     protected function validate(): array
     {
-        $errors = [];
-
-        if (!$this->getBody("name")) {
-            $errors["name"] = "Name is required";
+        if(count($errors = parent::validate())) {
             return $errors;
         }
 

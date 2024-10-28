@@ -74,4 +74,16 @@ class User extends BaseEntity
     {
         return UserStatus::from($this->status);
     }
+
+    // setters
+    public function update(array $data)
+    {
+        foreach ($data as $key => $value) {
+            if($key === "password") {
+                $value = password_hash($value, PASSWORD_DEFAULT);
+            }
+            $this->{$key} = $value;
+        }
+        $this->updateTimestamps();
+    }
 }

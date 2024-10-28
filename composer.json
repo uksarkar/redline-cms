@@ -12,7 +12,8 @@
         "monolog/monolog": "^3.7",
         "league/flysystem": "^3.29",
         "league/flysystem-local": "^3.29",
-        "erusev/parsedown": "^1.7"
+        "erusev/parsedown": "^1.7",
+        "vlucas/valitron": "^1.4"
     },
     "license": "MIT",
     "autoload": {

@@ -10,6 +10,7 @@ use RedlineCms\Controller\Admin\AuthController;
 use RedlineCms\Controller\Admin\DashboardController;
 use RedlineCms\Controller\Admin\SettingsController;
 use RedlineCms\Controller\Admin\ThemeController;
+use RedlineCms\Controller\Admin\UserController;
 use RedlineCms\Controller\CategoryController;
 use RedlineCms\Controller\HomeController;
 use RedlineCms\Controller\PageController;
@@ -55,4 +56,7 @@ Route::group(["path" => "/admin", "middlewares" => [AuthMiddleware::class]], fun
 
     Route::get("/themes", ThemeController::class, "index");
     Route::post("/themes", ThemeController::class, "update");
+
+    Route::get("/users/{id}", UserController::class, "view");
+    Route::post("/users/{id}", UserController::class, "update");
 });

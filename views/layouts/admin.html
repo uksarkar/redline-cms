@@ -30,10 +30,10 @@
                             <span class="icon"><i class="fi fi-tr-angle-small-down"></i></span>
                         </a>
                         <div class="navbar-dropdown">
-                            <!-- <a href="/profile" class="navbar-item">
+                            <a href="/admin/users/{{ context.user().getId() }}" class="navbar-item">
                                 <span class="icon"><i class="fi fi-tr-file-user"></i></span>
                                 <span>My Profile</span>
-                            </a> -->
+                            </a>
                             <a href="/admin/settings" class="navbar-item">
                                 <span class="icon"><i class="fi fi-tr-customization-cogwheel"></i></span>
                                 <span>Settings</span>
@@ -96,7 +96,8 @@
                         </a>
                     </li>
                     {% if context.appConfig.customRoutes|length %}
-                    <li class="{% if context.isParent('/admin/custom') or context.isPath('/admin/themes') %}is-active{% endif %}">
+                    <li
+                        class="{% if context.isParent('/admin/custom') or context.isPath('/admin/themes') %}is-active{% endif %}">
                         <a class="has-icon has-dropdown-icon">
                             <span class="icon"><i class="fi fi-tr-castle"></i></span>
                             <span class="menu-item-label">Theme</span>
@@ -114,7 +115,8 @@
                             {% for route in context.appConfig.customRoutes %}
                             <li class="{% if context.isPath(route.to) %}is-active-item{% endif %}">
                                 <a href="{{ route.to }}">
-                                    <span class="icon"><i class="fi fi-tr-{{ route.icon ?? 'arrow-small-right' }}"></i></span>
+                                    <span class="icon"><i
+                                            class="fi fi-tr-{{ route.icon ?? 'arrow-small-right' }}"></i></span>
                                     <span class="menu-item-label">{{ route.label }}</span>
                                 </a>
                             </li>
