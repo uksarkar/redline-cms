@@ -6,9 +6,9 @@ class Path {
     /**
      * The project root location
      */
-    public static function root(): string
+    public static function root(...$path): string
     {
-        return realpath(__DIR__ . "/../../../");
+        return static::join(realpath(__DIR__ . "/../../../"), ...$path);
     }
 
     /**

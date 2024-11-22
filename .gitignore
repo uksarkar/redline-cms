@@ -2,3 +2,4 @@ vendor
 cache
 redline_cms.db
 .Ds_store
+.env

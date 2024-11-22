@@ -25,7 +25,6 @@ use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Generator\ValidateEntities;
 use Cycle\Schema\Registry;
 use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 use Spiral\Tokenizer\ClassLocator;
 
 class DB
@@ -79,10 +78,12 @@ class DB
         ]);
 
         // setup logger
-        $logger = new Logger('redline-cms');
-        $logger->pushHandler(new StreamHandler(Path::storage("logs/queries.log")));
+        if(Env::is("APP_ENV", "debug")) {
+            Log::addLogger("db", "Redline-CMS:DB");
+            Log::addHandler("db", new StreamHandler(Path::storage("logs/queries.log")));
 
-        $dbManager->setLogger($logger);
+            $dbManager->setLogger(Log::logger("db"));
+        }
 
         // Return the ORM instance
         return new ORM(new Factory($dbManager), new Schema($schema));

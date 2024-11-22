@@ -13,6 +13,7 @@ use RedlineCms\Core\Http\Response;
 use RedlineCms\Core\Http\Route;
 use RedlineCms\Core\Support\App;
 use RedlineCms\Core\Support\DB;
+use RedlineCms\Core\Support\Env;
 use RedlineCms\Core\Support\Path;
 use RedlineCms\Entity\Category;
 use RedlineCms\Entity\Config;
@@ -28,6 +29,9 @@ use RedlineCms\Repository\UserRepository;
 use RedlineCms\Service\AppConfig;
 use RedlineCms\Service\AuthUser;
 use RedlineCms\Service\Symlink;
+
+// Initialize the environ variables
+Env::int();
 
 /**
  * Build the PHP-DI container

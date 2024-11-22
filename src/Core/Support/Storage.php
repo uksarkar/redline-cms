@@ -76,4 +76,10 @@ class Storage
 
         return $directories;
     }
+
+    public static function fsOf(string $root)
+    {
+        $adapter = new LocalFilesystemAdapter($root);
+        return new Filesystem($adapter);
+    }
 }
