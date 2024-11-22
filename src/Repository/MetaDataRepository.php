@@ -4,6 +4,7 @@ namespace RedlineCms\Repository;
 
 use Cycle\ORM\Select;
 use RedlineCms\Core\Support\ThemeManager;
+use RedlineCms\Entity\MetaData;
 
 /**
  * @method \RedlineCms\Entity\MetaData|null findByPK(int $id)
@@ -27,5 +28,17 @@ class MetaDataRepository extends Select\Repository
             ->where("name", $name)
             ->where("provider", $provider ?? ThemeManager::getTheme()->dir)
             ->fetchAll();
+    }
+
+    /**
+     * Try to get the first meta by the name or return a new instance with the provided values
+     */
+    public function firstOrNew(string $name, array $meta, string $provider = null)
+    {
+        if($dbMeta = $this->findByName($name, $provider)) {
+            return $dbMeta;
+        }
+
+        return new MetaData($name, $meta);
     }
 }

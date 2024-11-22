@@ -1,0 +1,76 @@
+{% extends "layouts/admin.html" %}
+
+{% block title %}Slots{% endblock %}
+{% set breadcrumbs = [{'title': 'Slots'}] %}
+{% block pageHeading %}Slots{% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-content">
+        <form method="post" action="/admin/custom/slots">
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Top right</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <textarea class="input" name="top_right" style="min-height: 100px; min-width: 100%;">
+                                {{ meta.getData().top_right|raw }}
+                            </textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Container top</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <textarea class="input" name="container_top" style="min-height: 100px; min-width: 100%;">
+                                {{ meta.getData().container_top|raw }}
+                            </textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Container bottom</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <textarea class="input" name="container_bottom" style="min-height: 100px; min-width: 100%;">
+                                {{ meta.getData().container_bottom|raw }}
+                            </textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Post right</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <textarea class="input" name="post_right" style="min-height: 100px; min-width: 100%;">
+                                {{ meta.getData().post_right|raw }}
+                            </textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class=" control is-right">
+                <button type="submit" class="button is-primary">
+                    <span>Submit</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -9,14 +9,23 @@
     <hr />
 
     <div class="box">
-        <article>
-            <div class="content">
-                <figure class="image is-4by3">
-                    <img src="{{ post.getFeaturedImage() }}" alt="{{ post.getTitle() }}">
-                </figure>
-                <p class="mt-3">{{ post.getContent()|raw }}</p>
+        <div class="columns">
+          <div class="column is-9">
+            <article>
+                <div class="content">
+                    <figure class="image is-4by3">
+                        <img src="{{ post.getFeaturedImage() }}" alt="{{ post.getTitle() }}">
+                    </figure>
+                    <p class="mt-3">{{ post.getContent()|raw }}</p>
+                </div>
+            </article>
+          </div>
+          <div class="column is-one-quarter">
+                <!-- slot post right -->
+                {{ slots.getData().post_right|raw }}
+                <!-- end slot post right -->
             </div>
-        </article>
+        </div>
     </div>
 
     <h2 class="is-size-4 has-text-weight-semibold mt-5">Latest Posts</h2>

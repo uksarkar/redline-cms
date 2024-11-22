@@ -8,18 +8,23 @@ use RedlineCms\Repository\MetaDataRepository;
 
 function default_get_colors_theme_meta(MetaDataRepository $repo)
 {
-    $colors = $repo->findByName("colors");
-    if (!$colors) {
-        $colors = new MetaData("colors", [
-            "header_color" => "#700303",
-            "header_menu_color" => "#d9b219",
-            "header_menu_active_color" => "#fed45e",
-            "footer_items_color" => "#dbe9f5",
-            "header_menu_hover_color" => "#c09a0b",
-        ]);
-    }
+    return $repo->firstOrNew("colors", [
+        "header_color" => "#700303",
+        "header_menu_color" => "#d9b219",
+        "header_menu_active_color" => "#fed45e",
+        "footer_items_color" => "#dbe9f5",
+        "header_menu_hover_color" => "#c09a0b",
+    ]);
+}
 
-    return $colors;
+function default_get_slots_meta(MetaDataRepository $repo)
+{
+    return $repo->firstOrNew("slots", [
+        "top_right" => "",
+        "container_top" => "",
+        "container_bottom" => "",
+        "post_right" => ""
+    ]);
 }
 
 add_hook("describe", [
@@ -73,7 +78,31 @@ add_hook("define_admin_routes", [
 
             return Response::back();
         }
-    ]
+    ],
+    [
+        "path" => "/slots",
+        "handler" => fn(MetaDataRepository $repo) => Response::view("@themes/default/admin/slots.html", ["meta" => default_get_slots_meta($repo)]),
+        "label" => "Slots",
+        "icon" => "block-quote",
+    ],
+    [
+        "path" => "/slots",
+        "method" => "POST",
+        "handler" => function (Request $request, MetaDataRepository $repo, EntityManager $manager) {
+            $meta = default_get_slots_meta($repo);
+            $slots = $meta->getData();
+
+            foreach ($request->body() as $key => $value) {
+                $slots[$key] = $value;
+            }
+
+            $meta->setData($slots);
+            $manager->persist($meta);
+            $manager->run();
+
+            return Response::redirect("/admin/custom/slots");
+        }
+    ],
 ]);
 
 add_hook("define_routes", [
